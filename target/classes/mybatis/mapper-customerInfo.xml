@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosch.dstools.bls.dao.ICustomerInfoDao" >
+
+<!-- personInfo -->
+	
+	<select id="searchByLoginIdAndPassword" resultMap="customerInfo" >
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime,curProjectId,curDomainId
+		FROM customer WHERE loginId = #{loginId, jdbcType=VARCHAR} and password = #{loginPwd, jdbcType=VARCHAR} and custstate=1
+	</select>
+	
+	<select id="searchByCustomerId" resultMap="customerInfo" >
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime,curProjectId,curDomainId
+		FROM customer WHERE custId = #{userId} and custstate=1
+	</select>
+	
+	<select id="searchByEmailAddr" resultMap="customerInfo" >
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime  
+		FROM customer WHERE loginId = #{emailAddr} and custstate=1
+	</select>
+	
+	<select id="findByCritical" resultMap="customerInfo" >
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime  
+		FROM customer WHERE custName like  "%"#{emailAddr}"%"  or emailAddress like "%"#{emailAddr}"%" and custstate=1
+	</select>
+	
+	<select id="findCountByCritical"  resultType="java.lang.Integer" >
+		SELECT count(custId)
+		FROM customer WHERE custName like  "%"#{emailAddr}"%"  or emailAddress like "%"#{emailAddr}"%" and custstate=1
+	</select>
+	
+	<insert id="addUser" parameterType="com.bosch.dstools.bls.datamodel.CustomerInfo" useGeneratedKeys="true" keyProperty="custId"> 
+        insert into customer (custId, loginId, password, custName, emailAddress, gender, custtype, custstate, registerTime, updateTime) 
+        values(#{custId}, #{loginId}, #{password},#{custName}, #{emailAddress}, #{gender}, #{type}, #{state}, #{registerTime}, #{updateTime})  
+    </insert>
+    
+    
+    <select id="findAll" resultMap="customerInfo" parameterType="java.lang.Integer">
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime
+		FROM customer WHERE custstate=1  and
+			<choose>
+				<when test="moveDirection==1">
+					 custId > #{curPageLastId}
+				</when>
+				<otherwise>
+					 #{curPageLastId} > custId  
+				</otherwise>
+			</choose>
+			<if test="searchCondition != null and searchCondition != '' ">  
+	            and (emailAddress like  "%"#{searchCondition}"%" or custName like "%"#{searchCondition}"%")
+	        </if> 
+	 	order by custId asc limit 0,#{perPage}
+	</select>
+	
+	   <select id="findCount" resultType="java.lang.Integer" >
+		SELECT count(custId) FROM customer WHERE custstate=1
+		<if test="searchCondition != null and searchCondition != '' ">  
+	            and (emailAddress like  "%"#{searchCondition}"%" or custName like "%"#{searchCondition}"%")
+	    </if> 
+	</select>
+	
+	
+	 <select id="findFirstPage" resultMap="customerInfo" parameterType="java.lang.Integer">
+		SELECT custId,loginId,password,custName,emailAddress,gender,custtype,custstate,registerTime,updateTime
+		FROM customer WHERE custstate=1 
+		<if test="searchCondition != null and searchCondition != '' ">  
+		and (emailAddress like  "%"#{searchCondition}"%" or custName like "%"#{searchCondition}"%")
+	    </if>
+		order by custId asc limit 0,#{perPage}
+	</select>
+	
+	
+	<resultMap type="com.bosch.dstools.bls.datamodel.CustomerInfo" id="customerInfo">
+		<result property="custId" column="userId" />
+		<result property="loginId" column="loginId" />
+		<result property="password" column="password" />
+		<result property="custName" column="custName" />
+		<result property="emailAddress" column="emailAddress" />
+		<result property="gender" column="gender" />
+		<result property="type" column="custtype" />
+		<result property="state" column="custstate" />
+		<result property="registerTime" column="registerTime" />	
+		<result property="updateTime" column="updateTime" />
+		<result property="curProjectId" column="curProjectId" />
+		<result property="curDomainId" column="curDomainId" />
+	</resultMap>
+	
+	<update id="updateCustomerInfo" parameterType="com.bosch.dstools.bls.datamodel.CustomerInfo">
+		 UPDATE customer  
+	    <trim prefix="SET" suffixOverrides=",">  
+	        <if test="custName != null and custName != '' ">  
+	            customer.custName = #{custName},  
+	        </if> 
+	        
+	        <if test="emailAddress != null and emailAddress != '' ">  
+	            customer.emailAddress = #{emailAddress},  
+	        </if>
+	        
+	        <if test="gender != null and gender != '' ">  
+	            customer.gender = #{gender},  
+	        </if>
+	        
+	        <if test="type != null and type != '' ">  
+	            customer.custtype = #{type},  
+	        </if>
+	        
+	        <if test="state != null and state != '' ">  
+	            customer.custstate = #{state},  
+	        </if>
+	        
+	        <if test="updateTime != null and updateTime != '' ">  
+	            customer.updateTime = #{updateTime},  
+	        </if> 
+	        <if test="curProjectId != null and curProjectId != '' ">  
+	            customer.curProjectId = #{curProjectId},  
+	        </if>
+	        <if test="curDomainId != null and curDomainId != '' ">  
+	            customer.curDomainId = #{curDomainId},
+	        </if>
+	    </trim>  
+	    WHERE customer.custId = #{custId}  
+	</update>  
+  
+</mapper>

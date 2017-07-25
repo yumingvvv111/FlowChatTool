@@ -1,0 +1,37 @@
+﻿{ "class": "yy.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "modelData": {"position":"230 200"},
+  "nodeDataArray": [ 
+{"category":"activity", "item":"generic task", "key":5, "loc":"860 820", "annotationContent":"C", "taskType":0, "boundaryEventArray":[  ],"properties":{
+"propertyA1":{"type":"annotationContent","content":"text1","writeable":"true"},
+"propertyA2":{"type":"annotationContent","content":"text2","writeable":"true"},
+"propertyA2":{"type":"annotationContent","content":"text3","writeable":"true"},
+"propertyA3":{"type":"annotationContent","content":"text4","writeable":"true"}
+}},
+{"category":"activity", "item":"generic task", "key":-4, "loc":"860 660", "annotationContent":"B2", "taskType":0, "boundaryEventArray":[  ]},
+{"category":"activity", "item":"generic task", "key":-5, "loc":"710 570", "annotationContent":"A", "taskType":0, "boundaryEventArray":[  ]},
+{"category":"activity", "item":"generic task", "key":-6, "loc":"560 730", "annotationContent":"B1", "taskType":0, "boundaryEventArray":[  ]},
+{"category":"event", "item":"start", "key":101, "loc":"706.421875 275", "annotationContent":"Start", "eventType":1, "eventDimension":1},
+{"category":"event", "item":"End", "key":104, "loc":"559.421875 860", "annotationContent":"End", "eventType":1, "eventDimension":8},
+{"category":"subprocess", "key":801, "loc":"372.541163125423 409.743211874577", "annotationContent":"Subprocess", "isGroup":true, "taskType":0, "isSubProcess":true, "boundaryEventArray":[  ]},
+{"category":"event", "item":"start", "key":-8, "loc":"480.421875 285", "annotationContent":"Start", "eventType":1, "eventDimension":1, "group":801},
+{"category":"event", "item":"End", "key":-9, "loc":"508.421875 449.9999999999999", "annotationContent":"End", "eventType":1, "eventDimension":8, "group":801},
+{"category":"subprocess", "key":-10, "loc":"358.359375 437.4749999999999", "annotationContent":"Subprocess", "isGroup":true, "taskType":0, "isSubProcess":true, "boundaryEventArray":[  ], "group":801},
+{"category":"event", "item":"start", "key":-11, "loc":"248.421875 343.9999999999999", "annotationContent":"Start", "eventType":1, "eventDimension":1, "group":-10},
+{"category":"event", "item":"End", "key":-12, "loc":"279.421875 510.9999999999999", "annotationContent":"End", "eventType":1, "eventDimension":8, "group":-10},
+{"category":"gateway", "key":201, "loc":"413.421875 357", "annotationContent":"Gateway", "gatewayType":0, "group":801}
+ ],
+  "linkDataArray": [ 
+{"from":-5, "to":-4, "fromPort":"", "toPort":"", "points":[770,570,780,570,860,570,860,585,860,600,860,620]},
+{"from":-4, "to":5, "fromPort":"", "toPort":"", "points":[860,700,860,710,860,735,860,735,860,760,860,780]},
+{"from":101, "to":801, "fromPort":"", "toPort":"", "points":[684.921875,275,674.921875,275,619.802586874577,275,619.802586874577,410.518211874577,564.6832987491539,410.518211874577,544.6832987491539,410.518211874577]},
+{"from":801, "to":-6, "fromPort":"", "toPort":"", "points":[372.54116312542294,610.9728474983078,372.54116312542294,620.9728474983078,372.54116312542294,645.4864237491539,540,645.4864237491539,540,670,540,690]},
+{"from":-11, "to":-12, "fromPort":"", "toPort":"", "points":[453.546875,428.38071187457695,473.546875,428.38071187457695,473.546875,498.38071187457695,433.546875,498.38071187457695,393.546875,498.38071187457695,393.546875,468.38071187457695]},
+{"from":-8, "to":201, "fromPort":"", "toPort":"", "points":[480.421875,306.4999999999999,480.421875,316.4999999999999,480.421875,324,480.421875,324,480.421875,332,508,332,508,252,413.421875,252,413.421875,296.4999999999999,413.421875,316.4999999999999]},
+{"from":201, "to":-9, "fromPort":"", "toPort":"", "visible":true, "points":[453.921875,370.4999999999999,463.921875,370.4999999999999,464.671875,370.4999999999999,464.671875,449.9999999999999,465.421875,449.9999999999999,485.421875,449.9999999999999]},
+{"from":101, "to":-5, "fromPort":"", "toPort":"", "points":[706.421875,296.5,706.421875,306.5,710,306.5,710,306.5,710,510,710,530]},
+{"from":-5, "to":-6, "fromPort":"", "toPort":"", "points":[710,610,710,620,710,645,580,645,580,670,580,690]},
+{"from":-6, "to":104, "fromPort":"", "toPort":"", "points":[560,770,560,780,560,798.5,559.421875,798.5,559.421875,817,559.421875,837]},
+{"from":5, "to":104, "fromPort":"", "toPort":"", "points":[800,820,790,820,696.2109375,820,696.2109375,860,602.421875,860,582.421875,860]}
+ ]}

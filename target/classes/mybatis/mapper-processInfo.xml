@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosch.dstools.bls.dao.IProcessInfoDao" >
+
+<!-- processInfo -->
+	<insert id="addProcess" parameterType="com.bosch.dstools.bls.datamodel.ProcessInfo" useGeneratedKeys="true" keyProperty="processId"> 
+        insert into process (processNo, processName, processType,description, version, createId, state, createTime, updateTime, content, filePath) 
+        values(#{processNo}, #{processName}, #{processType},#{description},#{version}, #{createId}, #{state}, #{createTime}, #{updateTime}, #{content}, #{filePath})  
+    </insert>
+    
+    <select id="findAll" resultMap="processInfo" >
+		SELECT   process_id,processNo, processName, processType,description, version, createId, state, createTime, updateTime, content, filePath  
+		FROM process WHERE state!=#{processStatus}
+		<choose>
+				<when test="moveDirection==1">
+					and process_id > #{curPageLastId}
+				</when>
+				<otherwise>
+					and #{curPageLastId} > process_id 
+				</otherwise>
+			</choose>
+			<if test="searchCondition != null and searchCondition != '' ">  
+	            and (processNo like "%"#{searchCondition}"%" or   
+	           processName like "%"#{searchCondition}"%")
+	        </if>
+	        order by process_id asc limit #{perPage}
+	</select>
+	
+	<select id="findCount" resultType="java.lang.Integer" >
+		SELECT count(process_id) FROM process WHERE state!=#{processStatus}
+			<if test="searchCondition != null and searchCondition != '' ">  
+	            and (processNo like "%"#{searchCondition}"%" or   
+	           processName like "%"#{searchCondition}"%")
+	        </if>
+	</select>
+	
+	<select id="searchProcessById" resultMap="processInfo" >
+		SELECT process_id, processNo, processName, processType,description, version, createId, state, createTime, updateTime, content, filePath  
+		FROM process WHERE process_id=#{id}
+	</select>
+	<select id="searchProcessByProcessNo" resultMap="processInfo" >
+		SELECT process_id, processNo, processName, processType,description, version, createId, state, createTime, updateTime, content, filePath  
+		FROM process WHERE processNo=#{processNo}
+	</select>
+	
+	<update id="updateProcessInfo" parameterType="com.bosch.dstools.bls.datamodel.ProcessInfo">
+		 UPDATE process 
+		 <trim prefix="set" suffixOverrides=","> 
+		 	<if test="processName!=null and processName!=''">processName=#{processName},</if>
+		 	<if test="processType!=null and processType!=''">processType=#{processType},</if>
+		 	<if test="description!=null and description!=''">description=#{description},</if>
+		 	<if test="version!=null and version!=''">version=#{version},</if>
+		 	<if test="state!=null and state!=''">state=#{state},</if>
+		 	<if test="updateTime!=null and updateTime!=''">updateTime=#{updateTime},</if> 
+		 	<if test="content!=null and content!=''">content=#{content},</if>
+		 	<if test="filePath!=null and filePath!=''">filePath=#{filePath},</if>
+		 </trim> 
+		 WHERE process_id=#{processId}
+	</update>
+  
+  <resultMap type="com.bosch.dstools.bls.datamodel.ProcessInfo" id="processInfo">
+		<result property="processId" column="process_id" />
+		<result property="processNo" column="processNo" />
+		<result property="processName" column="processName" />
+		<result property="processType" column="processType" />
+		<result property="description" column="description" />
+		<result property="createId" column="createId" />
+		<result property="content" column="content" />
+		<result property="filePath" column="filePath" />
+		<result property="version" column="version" />
+		<result property="state" column="state" />
+		<result property="createTime" column="createTime" />	
+		<result property="updateTime" column="updateTime" />
+	</resultMap>
+	 
+<!-- 	processInfo -->
+ 
+ <!--process audio info -->
+ 	<insert id="addProcessAudio" parameterType="com.bosch.dstools.bls.datamodel.TTSContent" useGeneratedKeys="false"> 
+        insert into process_audio_info (process_id, shape_id, content,server_path,path_version) 
+        values(#{processId}, #{shapeId}, #{content}, #{audioPath}, #{pathVersion})  
+    </insert>
+	
+	
+	<update id="updateProcessAudio" parameterType="com.bosch.dstools.bls.datamodel.TTSContent">
+		 UPDATE process_audio_info 
+		 <trim prefix="set" suffixOverrides=","> 
+		 	<if test="content!=null and content!=''">content=#{content},</if>
+		 	<if test="audioPath!=null and audioPath!=''">server_path=#{audioPath},</if>
+		 	<if test="pathVersion!=null and pathVersion!=-1">path_version=#{pathVersion},</if>
+		 </trim> 
+		 WHERE process_id=#{processId} and shape_id=#{shapeId}
+	</update>
+	
+	<select id="searchAudioURLByProIDAndShapeId" resultMap="processAudioInfo" >
+		SELECT process_id, shape_id, content, server_path, path_version
+		FROM process_audio_info WHERE process_id=#{processId} and shape_id=#{shapeId}
+	</select>
+	
+	  <resultMap type="com.bosch.dstools.bls.datamodel.TTSContent" id="processAudioInfo">
+		<result property="processId" column="process_id" />
+		<result property="shapeId" column="shape_id" />
+		<result property="content" column="content" />
+		<result property="audioPath" column="server_path" />
+		<result property="pathVersion" column="path_version" />
+	</resultMap>
+	<!-- Setting server path  -->
+	
+	<update id="updateMap" parameterType="com.bosch.dstools.bls.datamodel.PathMap">
+		 UPDATE path_map 
+		 <trim prefix="set" suffixOverrides=","> 
+		 	<if test="kContent!=null and kContent!=''">keyContent=#{kContent},</if>
+		 	<if test="vContent!=null and vContent!=''">valueContent=#{vContent},</if>
+		 	<if test="updateTime!=null and updateTime!=-1">updateTime=#{updateTime},</if>
+		 </trim> 
+		 WHERE mapId=#{mapId}
+	</update>
+	
+	<select id="obtainValue" resultMap="pathMapInfo" >
+		SELECT mapId, keyContent, valueContent, updateTime
+		FROM path_map WHERE keyContent=#{keyContent} and type=#{type}
+	</select>
+	
+	 <resultMap type="com.bosch.dstools.bls.datamodel.PathMap" id="pathMapInfo">
+		<result property="mapId" column="mapId" />
+		<result property="kContent" column="keyContent" />
+		<result property="vContent" column="valueContent" />
+		<result property="updateTime" column="updateTime" />
+		<result property="type" column="type" />
+	</resultMap>
+</mapper>

@@ -1,0 +1,3332 @@
+//*****************************************************YYsegmentation***************************//
+//
+//
+//                                                                                 Main Logic
+//
+//
+//**********************************************************************************************//
+function DrawCommandHandler() {
+    yy.CommandHandler.call(this);
+    this._arrowKeyBehavior = "move";
+}
+yy.Diagram.inherit(DrawCommandHandler, yy.CommandHandler);
+
+/**
+ * This controls whether or not the user can invoke the {@link #alignLeft}, {@link #alignRight},
+ * {@link #alignTop}, {@link #alignBottom}, {@link #alignCenterX}, {@link #alignCenterY} commands.
+ * @this {DrawCommandHandler}
+ * @return {boolean}
+ * This returns true:
+ * if the diagram is not {@link Diagram#isReadOnly},
+ * if the model is not {@link Model#isReadOnly}, and
+ * if there are at least two selected {@link Part}s.
+ */
+DrawCommandHandler.prototype.canAlignSelection = function() {
+    var diagram = this.diagram;
+    if (diagram === null || diagram.isReadOnly || diagram.isModelReadOnly)
+        return false;
+    if (diagram.selection.count < 2)
+        return false;
+    return true;
+};
+
+/**
+ * Aligns selected parts along the left-most edge of the left-most part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignLeft = function() {
+    var diagram = this.diagram;
+    diagram.startTransaction("aligning left");
+    var minPosition = Infinity;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        minPosition = Math.min(current.position.x, minPosition);
+    });
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(minPosition, current.position.y));
+    });
+    diagram.commitTransaction("aligning left");
+};
+
+/**
+ * Aligns selected parts at the right-most edge of the right-most part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignRight = function() {
+    var diagram = this.diagram;
+    diagram.startTransaction("aligning right");
+    var maxPosition = -Infinity;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        var rightSideLoc = current.actualBounds.x + current.actualBounds.width;
+        maxPosition = Math.max(rightSideLoc, maxPosition);
+    });
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(maxPosition - current.actualBounds.width, current.position.y));
+    });
+    diagram.commitTransaction("aligning right");
+};
+
+/**
+ * Aligns selected parts at the top-most edge of the top-most part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignTop = function() {
+    var diagram = this.diagram;
+    diagram.startTransaction("alignTop");
+    var minPosition = Infinity;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        minPosition = Math.min(current.position.y, minPosition);
+    });
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(current.position.x, minPosition));
+    });
+    diagram.commitTransaction("alignTop");
+};
+
+/**
+ * Aligns selected parts at the bottom-most edge of the bottom-most part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignBottom = function() {
+    var diagram = this.diagram;
+    diagram.startTransaction("aligning bottom");
+    var maxPosition = -Infinity;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        var bottomSideLoc = current.actualBounds.y + current.actualBounds.height;
+        maxPosition = Math.max(bottomSideLoc, maxPosition);
+    });
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(current.actualBounds.x, maxPosition - current.actualBounds.height));
+    });
+    diagram.commitTransaction("aligning bottom");
+};
+
+/**
+ * Aligns selected parts at the x-value of the center point of the first selected part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignCenterX = function() {
+    var diagram = this.diagram;
+    var firstSelection = diagram.selection.first();
+    if (!firstSelection)
+        return;
+    diagram.startTransaction("aligning Center X");
+    var centerX = firstSelection.actualBounds.x + firstSelection.actualBounds.width / 2;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(centerX - current.actualBounds.width / 2, current.actualBounds.y));
+    });
+    diagram.commitTransaction("aligning Center X");
+};
+
+/**
+ * Aligns selected parts at the y-value of the center point of the first selected part.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype.alignCenterY = function() {
+    var diagram = this.diagram;
+    var firstSelection = diagram.selection.first();
+    if (!firstSelection)
+        return;
+    diagram.startTransaction("aligning Center Y");
+    var centerY = firstSelection.actualBounds.y + firstSelection.actualBounds.height / 2;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        current.move(new yy.Point(current.actualBounds.x, centerY - current.actualBounds.height / 2));
+    });
+    diagram.commitTransaction("aligning Center Y");
+};
+
+/**
+ * Aligns selected parts top-to-bottom in order of the order selected.
+ * Distance between parts can be specified. Default distance is 0.
+ * @this {DrawCommandHandler}
+ * @param {number} distance
+ */
+DrawCommandHandler.prototype.alignColumn = function(distance) {
+    var diagram = this.diagram;
+    diagram.startTransaction("align Column");
+    if (distance === undefined)
+        distance = 0; // for aligning edge to edge
+    distance = parseFloat(distance);
+    var selectedParts = new Array();
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        selectedParts.push(current);
+    });
+    for (var i = 0; i < selectedParts.length - 1; i++) {
+        var current = selectedParts[i];
+        // adds distance specified between parts
+        var curBottomSideLoc = current.actualBounds.y + current.actualBounds.height + distance;
+        var next = selectedParts[i + 1];
+        next.move(new yy.Point(current.actualBounds.x, curBottomSideLoc));
+    }
+    diagram.commitTransaction("align Column");
+};
+
+/**
+ * Aligns selected parts left-to-right in order of the order selected.
+ * Distance between parts can be specified. Default distance is 0.
+ * @this {DrawCommandHandler}
+ * @param {number} distance
+ */
+DrawCommandHandler.prototype.alignRow = function(distance) {
+    if (distance === undefined)
+        distance = 0; // for aligning edge to edge
+    distance = parseFloat(distance);
+    var diagram = this.diagram;
+    diagram.startTransaction("align Row");
+    var selectedParts = new Array();
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link)
+            return; // skips over yy.Link
+        selectedParts.push(current);
+    });
+    for (var i = 0; i < selectedParts.length - 1; i++) {
+        var current = selectedParts[i];
+        // adds distance specified between parts
+        var curRightSideLoc = current.actualBounds.x + current.actualBounds.width + distance;
+        var next = selectedParts[i + 1];
+        next.move(new yy.Point(curRightSideLoc, current.actualBounds.y));
+    }
+    diagram.commitTransaction("align Row");
+};
+
+/**
+ * This controls whether or not the user can invoke the {@link #rotate} command.
+ * @this {DrawCommandHandler}
+ * @param {number=} angle the positive (clockwise) or negative (counter-clockwise) change in the rotation angle of each Part, in degrees.
+ * @return {boolean}
+ * This returns true:
+ * if the diagram is not {@link Diagram#isReadOnly},
+ * if the model is not {@link Model#isReadOnly}, and
+ * if there is at least one selected {@link Part}.
+ */
+DrawCommandHandler.prototype.canRotate = function(number) {
+    var diagram = this.diagram;
+    if (diagram === null || diagram.isReadOnly || diagram.isModelReadOnly)
+        return false;
+    if (diagram.selection.count < 1)
+        return false;
+    return true;
+};
+
+/**
+ * Change the angle of the parts connected with the given part. This is in the command handler
+ * so it can be easily accessed for the purpose of creating commands that change the rotation of a part.
+ * @this {DrawCommandHandler}
+ * @param {number=} angle the positive (clockwise) or negative (counter-clockwise) change in the rotation angle of each Part, in degrees.
+ */
+DrawCommandHandler.prototype.rotate = function(angle) {
+    if (angle === undefined)
+        angle = 90;
+    var diagram = this.diagram;
+    diagram.startTransaction("rotate " + angle.toString());
+    var diagram = this.diagram;
+    diagram.selection.each(function(current) {
+        if (current instanceof yy.Link || current instanceof yy.Group)
+            return; // skips over Links and Groups
+        current.angle += angle;
+    });
+    diagram.commitTransaction("rotate " + angle.toString());
+};
+
+/**
+ * This implements custom behaviors for arrow key keyboard events.
+ * Set {@link #arrowKeyBehavior} to "select", "move" (the default), "scroll" (the standard behavior), or "none"
+ * to affect the behavior when the user types an arrow key.
+ * @this {DrawCommandHandler}*/
+DrawCommandHandler.prototype.doKeyDown = function() {
+    var diagram = this.diagram;
+    if (diagram === null)
+        return;
+    var e = diagram.lastInput;
+
+    // determines the function of the arrow keys
+    if (e.key === "Up" || e.key === "Down" || e.key === "Left" || e.key === "Right") {
+
+        var behavior = this.arrowKeyBehavior;
+        if (behavior === "none") {
+            // no-op
+            return;
+        } else if (behavior === "select") {
+            this._arrowKeySelect();
+            return;
+        } else if (behavior === "move") {
+            this._arrowKeyMove();
+            return;
+        }
+        // otherwise drop through to get the default scrolling behavior
+    }
+
+    // otherwise still does all standard commands
+    yy.CommandHandler.prototype.doKeyDown.call(this);
+};
+
+/**
+ * Collects in an Array all of the non-Link Parts currently in the Diagram.
+ * @this {DrawCommandHandler}
+ * @return {Array}
+ */
+DrawCommandHandler.prototype._getAllParts = function() {
+    var allParts = new Array();
+    this.diagram.nodes.each(function(node) {
+        allParts.push(node);
+    });
+    this.diagram.parts.each(function(part) {
+        allParts.push(part);
+    });
+    // note that this ignores Links
+    return allParts;
+};
+
+/**
+ * To be called when arrow keys should move the Diagram.selection.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype._arrowKeyMove = function() {
+    var diagram = this.diagram;
+    var e = diagram.lastInput;
+    // moves all selected parts in the specified direction
+    var vdistance = 0;
+    var hdistance = 0;
+    // if control is being held down, move pixel by pixel. Else, moves by grid cell size
+    if (e.control || e.meta) {
+        vdistance = 1;
+        hdistance = 1;
+    } else if (diagram.grid !== null) {
+        var cellsize = diagram.grid.gridCellSize;
+        hdistance = cellsize.width;
+        vdistance = cellsize.height;
+    }
+    diagram.startTransaction("arrowKeyMove");
+    diagram.selection.each(function(part) {
+        if (e.key === "Up") {
+            part.move(new yy.Point(part.actualBounds.x, part.actualBounds.y - vdistance));
+        } else if (e.key === "Down") {
+            part.move(new yy.Point(part.actualBounds.x, part.actualBounds.y + vdistance));
+        } else if (e.key === "Left") {
+            part.move(new yy.Point(part.actualBounds.x - hdistance, part.actualBounds.y));
+        } else if (e.key === "Right") {
+            part.move(new yy.Point(part.actualBounds.x + hdistance, part.actualBounds.y));
+        }
+    });
+    diagram.commitTransaction("arrowKeyMove");
+};
+
+/**
+ * To be called when arrow keys should change selection.
+ * @this {DrawCommandHandler}
+ */
+DrawCommandHandler.prototype._arrowKeySelect = function() {
+    var diagram = this.diagram;
+    var e = diagram.lastInput;
+    // with a part selected, arrow keys change the selection
+    // arrow keys + shift selects the additional part in the specified direction
+    // arrow keys + control toggles the selection of the additional part
+    var nextPart = null;
+    if (e.key === "Up") {
+        nextPart = this._findNearestPartTowards(270);
+    } else if (e.key === "Down") {
+        nextPart = this._findNearestPartTowards(90);
+    } else if (e.key === "Left") {
+        nextPart = this._findNearestPartTowards(180);
+    } else if (e.key === "Right") {
+        nextPart = this._findNearestPartTowards(0);
+    }
+    if (nextPart !== null) {
+        if (e.shift) {
+            nextPart.isSelected = true;
+        } else if (e.control || e.meta) {
+            nextPart.isSelected = !nextPart.isSelected;
+        } else {
+            diagram.select(nextPart);
+        }
+    }
+};
+
+/**
+ * Finds the nearest Part in the specified direction, based on their center points.
+ * if it doesn't find anything, it just returns the current Part.
+ * @this {DrawCommandHandler}
+ * @param {number} dir the direction, in degrees
+ * @return {Part} the closest Part found in the given direction
+ */
+DrawCommandHandler.prototype._findNearestPartTowards = function(dir) {
+    var originalPart = this.diagram.selection.first();
+    if (originalPart === null)
+        return null;
+    var originalPoint = originalPart.actualBounds.center;
+    var allParts = this._getAllParts();
+    var closestDistance = Infinity;
+    var closest = originalPart; // if no parts meet the criteria, the same part remains selected
+
+    for (var i = 0; i < allParts.length; i++) {
+        var nextPart = allParts[i];
+        if (nextPart === originalPart)
+            continue; // skips over currently selected part
+        var nextPoint = nextPart.actualBounds.center;
+        var angle = originalPoint.directionPoint(nextPoint);
+        var anglediff = this._angleCloseness(angle, dir);
+        if (anglediff <= 45) { // if this part's center is within the desired direction's sector,
+            var distance = originalPoint.distanceSquaredPoint(nextPoint);
+            distance *= 1 + Math.sin(anglediff * Math.PI / 180); // the more different from the intended angle, the further it is
+            if (distance < closestDistance) { // and if it's closer than any other part,
+                closestDistance = distance; // remember it as a better choice
+                closest = nextPart;
+            }
+        }
+    }
+    return closest;
+};
+
+/**
+ * @this {DrawCommandHandler}
+ * @param {number} a
+ * @param {number} dir
+ * @return {number}
+ */
+DrawCommandHandler.prototype._angleCloseness = function(a, dir) {
+    return Math.min(Math.abs(dir - a), Math.min(Math.abs(dir + 360 - a), Math.abs(dir - 360 - a)));
+};
+
+/**
+ * Gets or sets the arrow key behavior. Possible values are "move", "select", and "scroll".
+ * The default value is "move".
+ * @name DrawCommandHandler#arrowKeyBehavior
+ * @function.
+ * @return {string}
+ */
+Object.defineProperty(DrawCommandHandler.prototype, "arrowKeyBehavior", {
+    get: function() {
+        return this._arrowKeyBehavior;
+    },
+    set: function(val) {
+        if (val !== "move" && val !== "select" && val !== "scroll" && val !== "none") {
+            throw new Error("DrawCommandHandler.arrowKeyBehavior must be either \"move\", \"select\", \"scroll\", or \"none\", not: " + val);
+        }
+        this._arrowKeyBehavior = val;
+    }
+});
+
+// Contains PoolLink and BPMNLinkingTool classes for sample
+
+// PoolLink, a special Link class for message flows from edges of pools
+
+function PoolLink() {
+    yy.Link.call(this);
+}
+yy.Diagram.inherit(PoolLink, yy.Link);
+
+PoolLink.prototype.getLinkPoint = function(node, port, spot, from, ortho, othernode, otherport) {
+    var r = new yy.Rect(port.getDocumentPoint(yy.Spot.TopLeft),
+        port.getDocumentPoint(yy.Spot.BottomRight));
+    var op = yy.Link.prototype.getLinkPoint.call(this, othernode, otherport, spot, from, ortho, node, port);
+
+    var below = op.y > r.centerY;
+    var y = below ? r.bottom : r.top;
+    if (node.category === "privateProcess") {
+        if (op.x < r.left)
+            return new yy.Point(r.left, y);
+        if (op.x > r.right)
+            return new yy.Point(r.right, y);
+        return new yy.Point(op.x, y);
+    } else { // otherwise get the standard link point by calling the base class method
+        return yy.Link.prototype.getLinkPoint.call(this, node, port, spot, from, ortho, othernode, otherport);
+    }
+};
+
+// If there are two links from & to same node... and pool is offset in X from node... the link toPoints collide on pool
+PoolLink.prototype.computeOtherPoint = function(othernode, otherport) {
+    var op = yy.Link.prototype.computeOtherPoint(this, othernode, otherport);
+    var node = this.toNode;
+    if (node === othernode)
+        node = this.fromNode;
+    if (othernode.category === "privateProcess") {
+        op.x = node.getDocumentPoint(yy.Spot.MiddleBottom).x;
+    }
+    return op;
+};
+
+PoolLink.prototype.getLinkDirection = function(node, port, linkpoint, spot, from, ortho, othernode, otherport) {
+    if (node.category === "privateProcess") {
+        var p = port.getDocumentPoint(yy.Spot.Center);
+        var op = otherport.getDocumentPoint(yy.Spot.Center);
+        var below = op.y > p.y;
+        return below ? 90 : 270;
+    } else {
+        return yy.Link.prototype.getLinkDirection.call(this, node, port, linkpoint, spot, from, ortho, othernode, otherport);
+    }
+};
+
+// BPMNLinkingTool, a custom linking tool to switch the class of the link created.
+
+function BPMNLinkingTool() {
+    yy.LinkingTool.call(this);
+    // don't allow user to create link starting on the To node
+    this.direction = yy.LinkingTool.ForwardsOnly;
+    this.temporaryLink.routing = yy.Link.Orthogonal;
+}
+yy.Diagram.inherit(BPMNLinkingTool, yy.LinkingTool);
+
+BPMNLinkingTool.prototype.insertLink = function(fromnode, fromport, tonode, toport) {
+    var lsave = null;
+    // maybe temporarily change the link data that is copied to create the new link
+    if (fromnode.category === "privateProcess" || tonode.category === "privateProcess") {
+        lsave = this.archetypeLinkData;
+        this.archetypeLinkData = {
+            category: "msg"
+        };
+    }
+
+    // create the link in the standard manner by calling the base method
+    var newlink = yy.LinkingTool.prototype.insertLink.call(this, fromnode, fromport, tonode, toport);
+
+    // maybe make the label visible
+    if (fromnode.category === "gateway") {
+        var label = newlink.findObject("Label");
+        if (label !== null)
+            label.visible = true;
+    }
+
+    // maybe restore the original archetype link data
+    if (lsave !== null)
+        this.archetypeLinkData = lsave;
+    return newlink;
+};
+
+/**======================Init===========================*/
+var _$ = yy.GraphObject.make; // for more concise visual tree definitions
+var defaultNodeFill = _$(yy.Brush, yy.Brush.Linear, {
+        0: "rgb(243, 244, 249)",
+        1: "rgb(236, 234, 253)"
+    });
+    // constants for design choices
+    var gradYellow = _$(yy.Brush, yy.Brush.Linear, {
+        0: "LightGoldenRodYellow ",
+        1: "#FFFF66"
+    });
+    var gradLightGreen = _$(yy.Brush, yy.Brush.Linear, {
+        0: "#E0FEE0",
+        1: "PaleGreen"
+    });
+    var gradLightRed = _$(yy.Brush, yy.Brush.Linear, {
+        0: "#FFCBCB",
+        1: "#FFC0CB"
+    });
+    var gradLightGray = _$(yy.Brush, yy.Brush.Linear, {
+        0: "White",
+        1: "#DADADA"
+    });
+function init() {
+    if (typeof(Storage) === "undefined") {
+        var currentFile = document.getElementById("currentFile");
+        currentFile.textContent = "Sorry! No web storage support.\nIf you're using Internet Explorer, you must load the page from a server for local storage to work.";
+    }
+
+    // hides open HTML Element
+    var openDocument = document.getElementById("openDocument");
+    openDocument.style.visibility = "hidden";
+    // hides remove HTML Element
+    var removeDocument = document.getElementById("removeDocument");
+    removeDocument.style.visibility = "hidden";
+    var activityNodeStroke = "#7762C3";
+    var activityMarkerStrokeWidth = 1.5;
+    var activityNodeWidth = 120;
+    var activityNodeHeight = 80;
+    var activityNodeStrokeWidth = 1
+    var activityNodeStrokeWidthIsCall = 4;
+
+    var subprocessNodeFill = defaultNodeFill;
+    var subprocessNodeStroke = activityNodeStroke;
+
+    var eventNodeSize = 60;
+    var eventNodeInnerSize = eventNodeSize - 6;
+    var eventNodeSymbolSize = eventNodeInnerSize - 14;
+    var EventEndOuterFillColor = "pink";
+    var EventBackgroundColor = gradLightGreen;
+    var EventSymbolLightFill = "white";
+    var EventSymbolDarkFill = "dimgray";
+    var EventDimensionStrokeColor = "green";
+    var EventDimensionStrokeEndColor = "red";
+    var eventNodeStrokeWidthIsEnd = 4;
+
+    var gatewayNodeSize = 80;
+    var gatewayNodeSymbolSize = 45;
+    var gatewayNodeFill = gradYellow;
+    var gatewayNodeStroke = "gold";
+    var gatewayNodeSymbolStroke = "gold";
+    var gatewayNodeSymbolFill = gradYellow;
+    var gatewayNodeSymbolStrokeWidth = 3;
+
+    var dataFill = gradLightGray;
+
+    window.myDiagram =
+        _$(yy.Diagram, "myDiagram", {
+            allowDrop: true, // accept drops from palette
+
+            commandHandler: new DrawCommandHandler(), // defined in DrawCommandHandler.js
+            // default to having arrow keys move selected nodes
+            "commandHandler.arrowKeyBehavior": "move",
+            mouseDrop: function(e) {
+                // when the selection is dropped in the diagram's background,
+                // make sure the selected Parts no longer belong to any Group
+                var ok = myDiagram.commandHandler.addTopLevelParts(myDiagram.selection, true);
+                if (!ok)
+                    myDiagram.currentTool.doCancel();
+            },
+            linkingTool: new BPMNLinkingTool(), // defined in BPMNClasses.js
+            "linkingTool.linkValidation": sameLevel, // defined below
+            "relinkingTool.linkValidation": sameLevel,
+            // set these kinds of Diagram properties after initialization, not now
+            "InitialLayoutCompleted": loadDiagramProperties, // defined below
+            groupSelectionAdornmentTemplate: // this applies to all Groups
+                _$(yy.Adornment, yy.Panel.Auto,
+                _$(yy.Shape, "Rectangle", {
+                    fill: null,
+                    stroke: "dodgerblue",
+                    strokeWidth: 3
+                }),
+                _$(yy.Placeholder)),
+            "commandHandler.archetypeGroupData": {
+                isGroup: true,
+                category: "OfNodes"
+            }
+        });
+    myDiagram._actionMode = 'select';
+    myDiagram.addDiagramListener("ChangedSelection",
+        function(e) {
+            var i = myDiagram.selection.iterator;
+            var nodeData;
+            do {
+                i.next();
+                nodeData = i.value && i.value.data;
+            } while (!1);
+            nodeData && putNodeProperty(nodeData);
+        });
+    var actionModeRecorder = null;
+    $('.palettel-wraper').hover(function(){
+        actionModeRecorder = myDiagram._actionMode;
+        myDiagram._actionMode = 'select';
+    }, function(){
+       myDiagram._actionMode = actionModeRecorder;
+    });
+    // Custom Figures for Shapes
+    yy.Shape.defineFigureGenerator("Empty", function(shape, w, h) {
+        return new yy.Geometry();
+    });
+
+    var annotationStr = "M 150,0L 0,0L 0,600L 150,600 M 800,0";
+    var annotationGeo = yy.Geometry.parse(annotationStr);
+    annotationGeo.normalize();
+    yy.Shape.defineFigureGenerator("Annotation", function(shape, w, h) {
+        var geo = annotationGeo.copy();
+        // calculate how much to scale the Geometry so that it fits in w x h
+        var bounds = geo.bounds;
+        var scale = Math.min(w / bounds.width, h / bounds.height);
+        geo.scale(scale, scale);
+        return geo;
+    });
+
+    var gearStr = "F M 391,5L 419,14L 444.5,30.5L 451,120.5L 485.5,126L 522,141L 595,83L 618.5,92L 644,106.5" +
+        "L 660.5,132L 670,158L 616,220L 640.5,265.5L 658.122,317.809L 753.122,322.809L 770.122,348.309L 774.622,374.309" +
+        "L 769.5,402L 756.622,420.309L 659.122,428.809L 640.5,475L 616.5,519.5L 670,573.5L 663,600L 646,626.5" +
+        "L 622,639L 595,645.5L 531.5,597.5L 493.192,613.462L 450,627.5L 444.5,718.5L 421.5,733L 393,740.5L 361.5,733.5" +
+        "L 336.5,719L 330,627.5L 277.5,611.5L 227.5,584.167L 156.5,646L 124.5,641L 102,626.5L 82,602.5L 78.5,572.5" +
+        "L 148.167,500.833L 133.5,466.833L 122,432.5L 26.5,421L 11,400.5L 5,373.5L 12,347.5L 26.5,324L 123.5,317.5" +
+        "L 136.833,274.167L 154,241L 75.5,152.5L 85.5,128.5L 103,105.5L 128.5,88.5001L 154.872,82.4758L 237,155" +
+        "L 280.5,132L 330,121L 336,30L 361,15L 391,5 Z M 398.201,232L 510.201,275L 556.201,385L 505.201,491L 399.201,537" +
+        "L 284.201,489L 242.201,385L 282.201,273L 398.201,232 Z";
+    var gearGeo = yy.Geometry.parse(gearStr);
+    gearGeo.normalize();
+
+    yy.Shape.defineFigureGenerator("BpmnTaskService", function(shape, w, h) {
+        var geo = gearGeo.copy();
+        // calculate how much to scale the Geometry so that it fits in w x h
+        var bounds = geo.bounds;
+        var scale = Math.min(w / bounds.width, h / bounds.height);
+        geo.scale(scale, scale);
+        // text should yy in the hand
+        geo.spot1 = new yy.Spot(0, 0.6, 10, 0);
+        geo.spot2 = new yy.Spot(1, 1);
+        return geo;
+    });
+
+    var handGeo = yy.Geometry.parse("F1M18.13,10.06 C18.18,10.07 18.22,10.07 18.26,10.08 18.91," +
+        "10.20 21.20,10.12 21.28,12.93 21.36,15.75 21.42,32.40 21.42,32.40 21.42," +
+        "32.40 21.12,34.10 23.08,33.06 23.08,33.06 22.89,24.76 23.80,24.17 24.72," +
+        "23.59 26.69,23.81 27.19,24.40 27.69,24.98 28.03,24.97 28.03,33.34 28.03," +
+        "33.34 29.32,34.54 29.93,33.12 30.47,31.84 29.71,27.11 30.86,26.56 31.80," +
+        "26.12 34.53,26.12 34.72,28.29 34.94,30.82 34.22,36.12 35.64,35.79 35.64," +
+        "35.79 36.64,36.08 36.72,34.54 36.80,33.00 37.17,30.15 38.42,29.90 39.67," +
+        "29.65 41.22,30.20 41.30,32.29 41.39,34.37 42.30,46.69 38.86,55.40 35.75," +
+        "63.29 36.42,62.62 33.47,63.12 30.76,63.58 26.69,63.12 26.69,63.12 26.69," +
+        "63.12 17.72,64.45 15.64,57.62 13.55,50.79 10.80,40.95 7.30,38.95 3.80," +
+        "36.95 4.24,36.37 4.28,35.35 4.32,34.33 7.60,31.25 12.97,35.75 12.97," +
+        "35.75 16.10,39.79 16.10,42.00 16.10,42.00 15.69,14.30 15.80,12.79 15.96," +
+        "10.75 17.42,10.04 18.13,10.06z ");
+    handGeo.rotate(90, 0, 0);
+    handGeo.normalize();
+    yy.Shape.defineFigureGenerator("BpmnTaskManual", function(shape, w, h) {
+        var geo = handGeo.copy();
+        // calculate how much to scale the Geometry so that it fits in w x h
+        var bounds = geo.bounds;
+        var scale = Math.min(w / bounds.width, h / bounds.height);
+        geo.scale(scale, scale);
+        // guess where text should yy (in the hand)
+        geo.spot1 = new yy.Spot(0, 0.6, 10, 0);
+        geo.spot2 = new yy.Spot(1, 1);
+        return geo;
+    });
+
+    // sets the qualities of the tooltip
+    var tooltiptemplate =
+        _$(yy.Adornment, yy.Panel.Auto,
+            _$(yy.Shape, "RoundedRectangle", {
+                fill: "whitesmoke",
+                stroke: "gray"
+            }),
+            _$(yy.TextBlock, {
+                    margin: 3,
+                    editable: true
+                },
+                new yy.Binding("text", "", function(data) {
+                    if (data.item !== undefined)
+                        return data.item;
+                    return "(unnamed item)";
+                }))
+        );
+
+    function convertShapeType(s) {
+        var shaps = [
+            'Circle',
+            'Ellipse',
+            'Rectangle',
+            'RoundedRectangle',
+            'Triangle',
+            'Diamond',
+            'Pentagon',
+            'Hexagon'
+        ];
+        if (typeof s === 'string') {
+            return yy.Geometry.parse(s, false);
+        }
+        return shaps[s] || 'Rectangle';
+    }
+
+    function nodeActivityTaskTypeConverter(s) {
+        var tasks = ["Empty",
+            "BpmnTaskMessage",
+            "BpmnTaskUser",
+            "BpmnTaskManual", // Custom hand symbol
+            "BpmnTaskScript",
+            "BpmnTaskMessage", // should be black on white
+            "BpmnTaskService", // Custom gear symbol
+            "InternalStorage"
+        ];
+        if (s < tasks.length)
+            return tasks[s];
+        return "NotAllowed"; // error
+    }
+
+    // location of event on boundary of Activity is based on the index of the event in the boundaryEventArray
+    function nodeActivityBESpotConverter(s) {
+        var x = 10 + (eventNodeSize / 2);
+        if (s === 0)
+            return new yy.Spot(0, 1, x, 0); // bottom left
+        if (s === 1)
+            return new yy.Spot(1, 1, -x, 0); // bottom right
+        if (s === 2)
+            return new yy.Spot(1, 0, -x, 0); // top right
+        return new yy.Spot(1, 0, -x - (s - 2) * eventNodeSize, 0); // top ... right-to-left-ish spread
+    }
+
+    function nodeActivityTaskTypeColorConverter(s) {
+        return (s == 5) ? "dimgray" : "white";
+    }
+
+    function nodeEventTypeConverter(s) {
+        var tasks = ["NotAllowed",
+            "Empty",
+            "BpmnTaskMessage",
+            "BpmnEventTimer",
+            "BpmnEventEscalation",
+            "BpmnEventConditional",
+            "Arrow",
+            "BpmnEventError",
+            "ThinX",
+            "BpmnActivityCompensation",
+            "Triangle",
+            "Or",
+            "ThickCross",
+            "Circle"
+        ];
+        if (s < tasks.length)
+            return tasks[s];
+        return "NotAllowed"; // error
+    }
+
+    function nodeEventDimensionStrokeColorConverter(s) {
+        if (s === 8)
+            return EventDimensionStrokeEndColor;
+        return EventDimensionStrokeColor;
+    }
+
+    function nodeEventDimensionSymbolFillConverter(s) {
+        return EventSymbolLightFill;
+    }
+
+    //------------------------------------------  Activity Node Boundary Events   ----------------------------------------------
+
+    var boundaryEventMenu = // context menu for each boundaryEvent on Activity node
+        _$(yy.Adornment, "Vertical",
+            _$("ContextMenuButton",
+                _$(yy.TextBlock, "Remove event"),
+                // in the click event handler, the obj.part is the Adornment; its adornedObject is the port
+                {
+                    click: function(e, obj) {
+                        removeActivityNodeBoundaryEvent(obj.part.adornedObject);
+                    }
+                })
+        );
+
+    // removing a boundary event doesn't not reposition other BE circles on the node
+    // just reassigning alignmentIndex in remaining BE would do that.
+    function removeActivityNodeBoundaryEvent(obj) {
+        myDiagram.startTransaction("removeBoundaryEvent");
+        var pid = obj.portId;
+        var arr = obj.panel.itemArray;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].portId === pid) {
+                myDiagram.model.removeArrayItem(arr, i);
+                break;
+            }
+        }
+        myDiagram.commitTransaction("removeBoundaryEvent");
+    }
+    
+    var boundaryEventItemTemplate =
+        _$(yy.Panel, "Spot", {
+                contextMenu: boundaryEventMenu,
+                alignmentFocus: yy.Spot.Center,
+                fromLinkable: true,
+                toLinkable: false,
+                cursor: "pointer",
+                fromSpot: yy.Spot.Bottom,
+                fromMaxLinks: 1,
+                toMaxLinks: 0
+            },
+            new yy.Binding("portId", "portId"),
+            new yy.Binding("alignment", "alignmentIndex", nodeActivityBESpotConverter),
+            _$(yy.Shape, "Circle", {
+                    desiredSize: new yy.Size(eventNodeSize, eventNodeSize)
+                },
+                new yy.Binding("fromSpot", "alignmentIndex",
+                    function(s) {
+                        //  nodeActivityBEFromSpotConverter, 0 & 1 yy on bottom, all others on top of activity
+                        if (s < 2)
+                            return yy.Spot.Bottom;
+                        return yy.Spot.Top;
+                    }),
+                new yy.Binding("fill", "color")),
+            _$(yy.Shape, "Circle", {
+                alignment: yy.Spot.Center,
+                desiredSize: new yy.Size(eventNodeInnerSize, eventNodeInnerSize),
+                fill: null
+            }),
+            _$(yy.Shape, "NotAllowed", {
+                    alignment: yy.Spot.Center,
+                    desiredSize: new yy.Size(eventNodeSymbolSize, eventNodeSymbolSize),
+                    fill: "black"
+                },
+                new yy.Binding("figure", "eventType", nodeEventTypeConverter)
+            )
+        );
+
+    //------------------------------------------  Activity Node contextMenu   ----------------------------------------------
+    //YY_v
+    var activityNodeMenu =
+        _$(yy.Adornment, "Vertical",
+            _$("ContextMenuButton",
+                _$(yy.TextBlock, "Link Node", {
+                    margin: 3
+                }), {
+                    click: function(e, obj) {
+                        var arg = [null, null, null, null],
+                            i = 0;
+                        var it = myDiagram.selection.iterator;
+                        var lt = myDiagram.toolManager.linkingTool;
+                        while (it.next()) {
+                            arg[i] = it.value;
+                            i += 2;
+                        }
+                        lt.insertLink.apply(lt, arg);
+                    }
+                }),
+            _$("ContextMenuButton",
+                _$(yy.TextBlock, "Export Node Paths", {
+                    margin: 3
+                }), {
+                    click: function(e, obj) {
+                        var pathServer = new PathServer(myDiagram.model.linkDataArray);
+                        var nodeKey = obj.Vi.Zl.key;
+                        var allPaths = {
+                            currentNodeKey: nodeKey,
+                            currentNodeAllPaths: pathServer.getAllPathsForKey(nodeKey)
+                        };
+                        var BB = Blob;
+                        saveAs(
+                            new BB(
+                                [JSON.stringify(allPaths, null, '  ')], {
+                                    type: "text/plain;charset=" + document.characterSet
+                                }
+                            ), 'Key:' + nodeKey + "Paths.txt"
+                        );
+                    }
+                }),
+            _$("ContextMenuButton",
+                _$(yy.TextBlock, "Select Node Paths", {
+                    margin: 3
+                }), {
+                    click: function(e, obj) {
+                        var pathServer = new PathServer(myDiagram.model.linkDataArray);
+                        var nodeKey = obj.Vi.Zl.key;
+                        var allPaths = pathServer.getAllPathsForKey(nodeKey);
+                        var linksData = myDiagram.model.linkDataArray;
+                        for (var i = 0, len = allPaths.length, item; i < len; i++) {
+                            item = allPaths[i].split(',');
+                            item.forEach(function(e, i) {
+                                var currentNodeKey = Number(e);
+                                var anotherNodeKey = Number(item[i + 1]);
+                                myDiagram.findNodeForKey(currentNodeKey).ib = true;
+                                if (anotherNodeKey) {
+                                    linksData.forEach(function(e, i) {
+                                        if (e.from === currentNodeKey && e.to === anotherNodeKey || e.to === currentNodeKey && e.from === anotherNodeKey) {
+                                            myDiagram.findLinkForData(e).ib = true;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }));
+
+    // sub-process,  loop, parallel, sequential, ad doc and compensation markers in horizontal array
+    function makeSubButton(sub) {
+        if (sub)
+            return [_$("SubGraphExpanderButton"), {
+                    name: "subExpandBtn",
+                    margin: 2,
+                    visible: false
+                },
+                new yy.Binding("visible", "isSubProcess")
+            ];
+        return [];
+    }
+
+    // sub-process,  loop, parallel, sequential, ad doc and compensation markers in horizontal array
+    function makeMarkerPanel(sub, scale) {
+        return _$(yy.Panel, "Horizontal", {
+                alignment: yy.Spot.MiddleBottom,
+                alignmentFocus: yy.Spot.MiddleBottom
+            },
+            _$(yy.Shape, "BpmnActivityLoop", {
+                    width: 12 / scale,
+                    height: 12 / scale,
+                    margin: 2,
+                    visible: false,
+                    strokeWidth: activityMarkerStrokeWidth
+                },
+                new yy.Binding("visible", "isLoop")),
+            _$(yy.Shape, "BpmnActivityParallel", {
+                    width: 12 / scale,
+                    height: 12 / scale,
+                    margin: 2,
+                    visible: false,
+                    strokeWidth: activityMarkerStrokeWidth
+                },
+                new yy.Binding("visible", "isParallel")),
+            _$(yy.Shape, "BpmnActivitySequential", {
+                    width: 12 / scale,
+                    height: 12 / scale,
+                    margin: 2,
+                    visible: false,
+                    strokeWidth: activityMarkerStrokeWidth
+                },
+                new yy.Binding("visible", "isSequential")),
+            _$(yy.Shape, "BpmnActivityAdHoc", {
+                    width: 12 / scale,
+                    height: 12 / scale,
+                    margin: 2,
+                    visible: false,
+                    strokeWidth: activityMarkerStrokeWidth
+                },
+                new yy.Binding("visible", "isAdHoc")),
+            _$(yy.Shape, "BpmnActivityCompensation", {
+                    width: 12 / scale,
+                    height: 12 / scale,
+                    margin: 2,
+                    visible: false,
+                    strokeWidth: activityMarkerStrokeWidth,
+                    fill: null
+                },
+                new yy.Binding("visible", "isCompensation")),
+            makeSubButton(sub)
+        ); // end activity markers horizontal panel
+    }
+    function TemplateFactory(){
+        
+    }
+    TemplateFactory({
+        xtype:"Node",
+        locationObjectName: "SHAPE",
+        locationSpot: yy.Spot.Center,
+        resizable: true,
+        resizeObjectName: "PANEL",
+        toolTip: tooltiptemplate,
+        selectionAdorned: false, // use a Binding on the Shape.stroke to show selection
+        contextMenu: activityNodeMenu,
+        itemTemplate: boundaryEventItemTemplate,
+        isActionable: false,
+        binding: [
+          {attribute: "itemArray", data: "boundaryEventArray"},
+          {attribute: "location", data: "loc", convertTo: yy.Point.parse, convertFrom: yy.Point.stringify},
+          {attribute: "layerName", data: "isSelected", convertTo: function(s) {
+                return s ? "Foreground" : "";
+            }, ofObject: ""},
+          {attribute: "location", data: "loc", convertTo: yy.Point.parse, convertFrom: yy.Point.stringify},
+        ],
+        children: [
+          {
+            xtype: "Panel",
+            layout: "Auto",
+            name: "PANEL",
+            desiredSize: new yy.Size(activityNodeWidth/1.2, activityNodeHeight),
+            binding: [
+              {attribute: "location", data: "loc", convertTo: yy.Point.parse, convertFrom: yy.Point.stringify}
+            ],
+            children: [
+              
+            ]
+          }
+        ]
+
+    });
+    var activityNodeTemplate =
+        _$(yy.Node, "Spot", {
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                resizable: true,
+                resizeObjectName: "PANEL",
+                toolTip: tooltiptemplate,
+                selectionAdorned: false, // use a Binding on the Shape.stroke to show selection
+                contextMenu: activityNodeMenu,
+                itemTemplate: boundaryEventItemTemplate,
+                isActionable: false,
+                doubleClick: function(e, node){
+                    myDiagram.commandHandler.editTextBlock();
+                }
+            },
+            new yy.Binding("itemArray", "boundaryEventArray"),
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            // move a selected part into the Foreground layer, so it isn"t obscured by any non-selected parts
+            new yy.Binding("layerName", "isSelected", function(s) {
+                return s ? "Foreground" : "";
+            }).ofObject(),
+            _$(yy.Panel, "Auto", {
+                    name: "PANEL",
+                    desiredSize: new yy.Size(activityNodeWidth/1.2, activityNodeHeight)
+                },
+                new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify),
+                    _$(yy.Shape, // the outside rounded rectangle
+                        {
+                            name: "SHAPE",
+                            fill: defaultNodeFill,
+                            stroke: activityNodeStroke,
+                            parameter1: 10, // corner size
+                            portId: "",
+                            fromLinkable: true,
+                            toLinkable: true,
+                            cursor: "pointer",
+                            fromSpot: yy.Spot.AllSides,
+                            toSpot: yy.Spot.AllSides
+                        },
+                        new yy.Binding("figure", "shapeType", convertShapeType),
+                        new yy.Binding("geometry", "geometry", convertShapeType),
+                        new yy.Binding("fill", "color"),
+                        new yy.Binding("strokeWidth", "isCall",
+                            function(s) {
+                                return s ? activityNodeStrokeWidthIsCall : activityNodeStrokeWidth;
+                            })),
+                    _$(yy.Shape, // the inner "Transaction" rounded rectangle
+                        {
+                            margin: 3,
+                            stretch: yy.GraphObject.Fill,
+                            stroke: activityNodeStroke,
+                            parameter1: 8,
+                            fill: null,
+                            visible: false
+                        },
+                        new yy.Binding("figure", "shapeType", convertShapeType),
+                        new yy.Binding("visible", "isTransaction")),
+                    // task icon
+                    _$(yy.Shape, "BpmnTaskScript", // will be None, Script, Manual, Service, etc via converter
+                        {
+                            alignment: new yy.Spot(0, 0, 5, 5),
+                            alignmentFocus: yy.Spot.TopLeft,
+                            width: 22,
+                            height: 22
+                        },
+                        new yy.Binding("fill", "taskType", nodeActivityTaskTypeColorConverter),
+                        new yy.Binding("figure", "taskType", nodeActivityTaskTypeConverter)
+                    ), // end Task Icon
+                    makeMarkerPanel(false, 1), // sub-process,  loop, parallel, sequential, ad doc and compensation markers
+
+                _$(yy.TextBlock, // the center text
+                    {
+                        alignment: yy.Spot.Center,
+                        textAlign: "center",
+                        margin: 10,
+                        editable: true
+                    },
+                    new yy.Binding("text", "annotationContent").makeTwoWay())
+            )
+        ); // end yy.Node
+
+    // ---------------------------------------- template for Activity / Task node in Palette
+
+    var palscale = 1;
+    var activityNodeTemplateForPalette =
+        _$(yy.Node, "Vertical", {
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                selectionAdorned: false
+            },
+                _$(yy.Panel, "Spot",
+                    _$(yy.Shape,
+                        {
+                            name: "SHAPE",
+                            fill: defaultNodeFill,
+                            stroke: activityNodeStroke,
+                            width: 70,
+                            height: 70,
+                            parameter1: 10 / palscale // corner size (default 10)
+                        },
+                        new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify),
+                        new yy.Binding("figure", "shapeType", convertShapeType),
+                        new yy.Binding("geometry", "geometry", convertShapeType),
+                        new yy.Binding("fill", "color").makeTwoWay(),
+                        new yy.Binding("strokeWidth", "isCall",
+                            function(s) {
+                                return s ? activityNodeStrokeWidthIsCall : activityNodeStrokeWidth;
+                            })),
+                    _$(yy.Shape,
+                        {
+                            margin: 3,
+                            stretch: yy.GraphObject.Fill,
+                            stroke: activityNodeStroke,
+                            parameter1: 8 / palscale,
+                            fill: null,
+                            visible: false
+                        },
+                        new yy.Binding("figure", "shapeType", convertShapeType),
+                        new yy.Binding("visible", "isTransaction")),
+                    // task icon
+                    _$(yy.Shape, "BpmnTaskScript", // will be None, Script, Manual, Service, etc via converter
+                        {
+                            alignment: new yy.Spot(0, 0, 5, 5),
+                            alignmentFocus: yy.Spot.TopLeft,
+                            width: 22 / palscale,
+                            height: 22 / palscale
+                        },
+                        new yy.Binding("fill", "taskType", nodeActivityTaskTypeColorConverter),
+                        new yy.Binding("figure", "taskType", nodeActivityTaskTypeConverter)),
+                    makeMarkerPanel(false, palscale) // sub-process,  loop, parallel, sequential, ad doc and compensation markers
+                ), // End Spot panel
+            _$(yy.TextBlock, // the center text
+                {
+                    alignment: yy.Spot.Center,
+                    textAlign: "center",
+                    margin: 2
+                }, new yy.Binding("text").makeTwoWay())
+        ); // End Node
+
+    var subProcessGroupTemplateForPalette =
+        _$(yy.Group, "Vertical", {
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                isSubGraphExpanded: false,
+                selectionAdorned: false
+            },
+            _$(yy.Panel, "Auto", {
+                    name: "PANEL",
+                    width: 70,
+                    height: 70
+                },
+                _$(yy.Panel, "Spot",
+                    _$(yy.Shape, "RoundedRectangle", // the outside rounded rectangle
+                        {
+                            name: "SHAPE",
+                            fill: defaultNodeFill,
+                            stroke: activityNodeStroke,
+                            parameter1: 10 / palscale // corner size (default 10)
+                        },
+                        new yy.Binding("strokeWidth", "isCall", function(s) {
+                            return s ? activityNodeStrokeWidthIsCall : activityNodeStrokeWidth;
+                        })
+                    ),
+                    _$(yy.Shape, "RoundedRectangle", // the inner "Transaction" rounded rectangle
+                        {
+                            margin: 3,
+                            stretch: yy.GraphObject.Fill,
+                            stroke: activityNodeStroke,
+                            parameter1: 8 / palscale,
+                            fill: null,
+                            visible: false
+                        },
+                        new yy.Binding("visible", "isTransaction")),
+                    _$(yy.Panel, "Horizontal", {
+                            alignment: yy.Spot.MiddleBottom,
+                            alignmentFocus: yy.Spot.MiddleBottom
+                        },
+                        _$(yy.Shape, "BpmnActivityLoop", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                margin: 2,
+                                visible: false,
+                                strokeWidth: activityMarkerStrokeWidth
+                            },
+                            new yy.Binding("visible", "isLoop")),
+                        _$(yy.Shape, "BpmnActivityParallel", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                margin: 2,
+                                visible: false,
+                                strokeWidth: activityMarkerStrokeWidth
+                            },
+                            new yy.Binding("visible", "isParallel")),
+                        _$(yy.Shape, "BpmnActivitySequential", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                margin: 2,
+                                visible: false,
+                                strokeWidth: activityMarkerStrokeWidth
+                            },
+                            new yy.Binding("visible", "isSequential")),
+                        _$(yy.Shape, "BpmnActivityAdHoc", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                margin: 2,
+                                visible: false,
+                                strokeWidth: activityMarkerStrokeWidth
+                            },
+                            new yy.Binding("visible", "isAdHoc")),
+                        _$(yy.Shape, "BpmnActivityCompensation", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                margin: 2,
+                                visible: false,
+                                strokeWidth: activityMarkerStrokeWidth,
+                                fill: null
+                            },
+                            new yy.Binding("visible", "isCompensation")),
+                        // add a fake subgraph button (so we can scale it)
+                        _$(yy.Panel, "Auto", {
+                                margin: 2,
+                                visible: false
+                            }, // don't have a plus with a box around it, so make one from 2 parts
+                            _$(yy.Shape, "Rectangle", {
+                                width: 12 / palscale,
+                                height: 12 / palscale,
+                                strokeWidth: activityMarkerStrokeWidth,
+                                fill: null
+                            }),
+                            _$(yy.Shape, "PlusLine", {
+                                width: 8 / palscale,
+                                height: 8 / palscale,
+                                strokeWidth: activityMarkerStrokeWidth
+                            }),
+                            new yy.Binding("visible", "isSubProcess")
+                        )
+                    ) // end activity markers horizontal panel
+                )
+            ), // end main body rectangles spot panel
+            _$(yy.TextBlock, // the center text
+                {
+                    alignment: yy.Spot.Center,
+                    textAlign: "center",
+                    margin: 2
+                },
+                new yy.Binding("text", "annotationContent").makeTwoWay())
+        ); // end yy.Group
+
+    //------------------------------------------  Event Node Template   ----------------------------------------------
+
+    var eventNodeTemplate =
+        _$(yy.Node, "Vertical", {
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                toolTip: tooltiptemplate,
+                resizable: true,
+                resizeObjectName: "SHAPE",
+                doubleClick: function(e, node){
+                    myDiagram.commandHandler.editTextBlock();
+                }
+            },
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            // move a selected part into the Foreground layer, so it isn't obscured by any non-selected parts
+            new yy.Binding("layerName", "isSelected", function(s) {
+                return s ? "Foreground" : "";
+            }).ofObject(),
+            
+            _$(yy.Panel, "Spot",
+                _$(yy.Shape, "Circle", // Outer circle
+                    {
+                        strokeWidth: 1,
+                        name: "SHAPE",
+                        desiredSize: new yy.Size(eventNodeSize, eventNodeSize),
+                        portId: "",
+                        fromLinkable: true,
+                        toLinkable: true,
+                        width: 70,
+                        height: 70,
+                        cursor: "pointer"
+                    },
+                    new yy.Binding("fill", "color").makeTwoWay(),
+                    
+                    new yy.Binding("strokeWidth", "eventDimension", function(s) {
+                        return 1;
+                        //                                                        return s === 8 ? eventNodeStrokeWidthIsEnd : 1;
+                    }),
+                    new yy.Binding("stroke", "eventDimension", nodeEventDimensionStrokeColorConverter),
+                    new yy.Binding("strokeDashArray", "eventDimension", function(s) {
+                        return (s === 3 || s === 6) ? [4, 2] : null;
+                    }),
+                    new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify)
+                ), // end main shape
+                _$(yy.Shape, "Circle", // Inner circle
+                    {
+                        alignment: yy.Spot.Center,
+                        desiredSize: new yy.Size(eventNodeInnerSize, eventNodeInnerSize),
+                        fill: null
+                    },
+                    new yy.Binding("stroke", "eventDimension", nodeEventDimensionStrokeColorConverter),
+                    new yy.Binding("strokeDashArray", "eventDimension", function(s) {
+                        return (s === 3 || s === 6) ? [4, 2] : null;
+                    }), // dashes for non-interrupting
+                    new yy.Binding("visible", "eventDimension", function(s) {
+                        return s > 3 && s <= 7;
+                    }) // inner  only visible for 4 thru 7
+                ),
+                _$(yy.Shape, "NotAllowed", {
+                        alignment: yy.Spot.Center,
+                        desiredSize: new yy.Size(eventNodeSymbolSize, eventNodeSymbolSize),
+                        stroke: "black"
+                    },
+                    new yy.Binding("figure", "eventType", nodeEventTypeConverter),
+                    new yy.Binding("fill", "eventDimension", nodeEventDimensionSymbolFillConverter)
+                ),
+                _$(yy.TextBlock, {
+                alignment: yy.Spot.Center,
+                textAlign: "center",
+                margin: 5,
+                editable: true
+            }, new yy.Binding("text", "annotationContent"))
+            ) // end Auto Panel
+            
+
+        ); // end yy.Node Vertical
+
+    //------------------------------------------  Gateway Node Template   ----------------------------------------------
+
+    function nodeGatewaySymbolTypeConverter(s) {
+        var tasks = ["Empty",
+            "ThinCross", // Parallel
+            "Circle", // Inclusive
+            "AsteriskLine", // Complex
+            "ThinX", // Exclusive
+            "BpmnTaskManual",
+            "BpmnTaskUser",
+            "BpmnTaskMessage"
+        ]
+        if (s < tasks.length)
+            return tasks[s];
+        return "NotAllowed"; // error
+    }
+
+    // tweak the size of some of the gateway icons
+    function nodeGatewaySymbolSizeConverter(s) {
+        var size = new yy.Size(gatewayNodeSymbolSize, gatewayNodeSymbolSize);
+        if (s === 4) {
+            size.width = size.width / 4 * 3;
+            size.height = size.height / 4 * 3;
+        }
+        return size;
+    }
+
+    function nodePalGatewaySymbolSizeConverter(s) {
+        var size = nodeGatewaySymbolSizeConverter(s);
+        size.width = size.width / 2;
+        size.height = size.height / 2;
+        return size;
+    }
+
+    var gatewayNodeTemplate =
+        _$(yy.Node, "Vertical", {
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                toolTip: tooltiptemplate,
+                doubleClick: function(e, node){
+                    myDiagram.commandHandler.editTextBlock();
+                },
+                resizable: false,
+                resizeObjectName: "SHAPE"
+            },
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            // move a selected part into the Foreground layer, so it isn't obscured by any non-selected parts
+            new yy.Binding("layerName", "isSelected", function(s) {
+                return s ? "Foreground" : "";
+            }).ofObject(),
+            _$(yy.Panel, "Spot",
+                _$(yy.Shape, "Diamond", {
+                        strokeWidth: 1,
+                        fill: gatewayNodeFill,
+                        stroke: gatewayNodeStroke,
+                        name: "SHAPE",
+                        // desiredSize: new yy.Size(gatewayNodeSize, gatewayNodeSize),
+                        portId: "",
+                        fromLinkable: true,
+                        toLinkable: true,
+                        cursor: "pointer",
+                        width: 70,
+                        height: 70,
+                        fromSpot: yy.Spot.AllSides,
+                        toSpot: yy.Spot.AllSides
+                    },
+                    new yy.Binding('fill', 'color'),
+                    new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify)), // end main shape
+                _$(yy.Shape, "NotAllowed", {
+                        alignment: yy.Spot.Center,
+                        stroke: gatewayNodeSymbolStroke,
+                        strokeWidth: gatewayNodeSymbolStrokeWidth,
+                        fill: gatewayNodeSymbolFill
+                    },
+                    new yy.Binding("figure", "gatewayType", nodeGatewaySymbolTypeConverter),
+                    new yy.Binding("desiredSize", "gatewayType", nodeGatewaySymbolSizeConverter)),
+                _$(yy.TextBlock, {
+                    alignment: yy.Spot.Center,
+                    textAlign: "center",
+                    margin: 5,
+                    editable: true
+                },
+                new yy.Binding("text", 'annotationContent').makeTwoWay())
+            )// end Auto Panel
+            
+        ); // end yy.Node Vertical
+
+    //--------------------------------------------------------------------------------------------------------------
+
+    var gatewayNodeTemplateForPalette =
+        _$(yy.Node, "Vertical", {
+                toolTip: tooltiptemplate,
+                resizable: false,
+                locationObjectName: "SHAPE",
+                locationSpot: yy.Spot.Center,
+                resizeObjectName: "SHAPE"
+            },
+            _$(yy.Panel, "Spot",
+                _$(yy.Shape, "Diamond", {
+                    strokeWidth: 1,
+                    fill: gatewayNodeFill,
+                    stroke: gatewayNodeStroke,
+                    name: "SHAPE",
+                    width: 70,
+                    height: 70
+                }),
+                _$(yy.Shape, "NotAllowed", {
+                        alignment: yy.Spot.Center,
+                        stroke: gatewayNodeSymbolStroke,
+                        strokeWidth: gatewayNodeSymbolStrokeWidth,
+                        fill: gatewayNodeSymbolFill
+                    },
+                    new yy.Binding("figure", "gatewayType", nodeGatewaySymbolTypeConverter),
+                    new yy.Binding("desiredSize", "gatewayType", nodePalGatewaySymbolSizeConverter))),
+            _$(yy.TextBlock, {
+                    alignment: yy.Spot.Center,
+                    textAlign: "center",
+                    margin: 5,
+                    editable: false
+                },
+                new yy.Binding("text"))
+        );
+
+    //--------------------------------------------------------------------------------------------------------------
+
+    var annotationNodeTemplate =
+        _$(yy.Node, "Auto", {
+                background: gradLightGray
+            },
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            _$(yy.Shape, "Annotation", // A left bracket shape
+                {
+                    portId: "",
+                    fromLinkable: true,
+                    cursor: "pointer",
+                    fromSpot: yy.Spot.Left,
+                    strokeWidth: 2,
+                    stroke: "gray"
+                }),
+            _$(yy.TextBlock, {
+                    margin: 5,
+                    editable: true
+                },
+                new yy.Binding("text").makeTwoWay())
+        );
+
+
+    //------------------------------------------  private process Node Template Map   ----------------------------------------------
+
+    var privateProcessNodeTemplate =
+        _$(yy.Node, "Auto", {
+                layerName: "Background",
+                resizable: true,
+                resizeObjectName: "LANE"
+            },
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            _$(yy.Shape, "Rectangle", {
+                fill: null
+            }),
+            _$(yy.Panel, "Table", // table with 2 cells to hold header and lane
+                {
+                    desiredSize: new yy.Size(activityNodeWidth * 6, activityNodeHeight),
+                    background: dataFill,
+                    name: "LANE",
+                    minSize: new yy.Size(activityNodeWidth, activityNodeHeight * 0.667)
+                },
+                new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify),
+                _$(yy.TextBlock, {
+                        row: 0,
+                        column: 0,
+                        angle: 270,
+                        margin: 5,
+                        editable: true,
+                        textAlign: "center"
+                    },
+                    new yy.Binding("text").makeTwoWay()),
+                _$(yy.RowColumnDefinition, {
+                    column: 1,
+                    separatorStrokeWidth: 1,
+                    separatorStroke: "black"
+                }),
+                _$(yy.Shape, "Rectangle", {
+                    row: 0,
+                    column: 1,
+                    stroke: null,
+                    fill: "transparent",
+                    portId: "",
+                    fromLinkable: true,
+                    toLinkable: true,
+                    fromSpot: yy.Spot.TopBottomSides,
+                    toSpot: yy.Spot.TopBottomSides,
+                    cursor: "pointer",
+                    stretch: yy.GraphObject.Fill
+                })
+            )
+        );
+
+    var privateProcessNodeTemplateForPalette =
+        _$(yy.Node, "Vertical", {
+                locationSpot: yy.Spot.Center
+            },
+            _$(yy.Shape, "Process", {
+                fill: dataFill,
+                desiredSize: new yy.Size(gatewayNodeSize / 2, gatewayNodeSize / 2)
+            }),
+            _$(yy.TextBlock, {
+                    margin: 5,
+                    editable: true
+                },
+                new yy.Binding("text"))
+        );
+
+    var subProcessGroupTemplate =
+        _$(yy.Group, "Spot", {
+                locationSpot: yy.Spot.Center,
+                locationObjectName: "PH",
+                //locationSpot: yy.Spot.Center,
+                isSubGraphExpanded: false,
+                layerName: '',
+                doubleClick: function(e, node){
+                    myDiagram.commandHandler.editTextBlock();
+                },
+                mouseDrop: function(e, grp) {
+                    var ok = grp.addMembers(grp.diagram.selection, true);
+                    if (!ok)
+                        grp.diagram.currentTool.doCancel();
+                },
+                contextMenu: activityNodeMenu,
+                itemTemplate: boundaryEventItemTemplate
+            },
+            new yy.Binding("itemArray", "boundaryEventArray"),
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify),
+            // move a selected part into the Foreground layer, so it isn't obscured by any non-selected parts
+            _$(yy.Panel, "Auto",
+                _$(yy.Shape, "RoundedRectangle", {
+                        name: "PH",
+                        fill: subprocessNodeFill,
+                        stroke: subprocessNodeStroke,
+                        minSize: new yy.Size(activityNodeWidth, activityNodeHeight),
+                        portId: "",
+                        fromLinkable: true,
+                        toLinkable: true,
+                        width: 70,
+                        height: 70,
+                        cursor: "pointer"
+                    },
+                    new yy.Binding("desiredSize", "size", yy.Size.parse).makeTwoWay(yy.Size.stringify),
+                    new yy.Binding('fill', 'color'),
+                    new yy.Binding("strokeWidth", "isCall", function(s) {
+                        return s ? activityNodeStrokeWidthIsCall : activityNodeStrokeWidth;
+                    })
+                ),
+                _$(yy.Panel, "Vertical", {
+                        defaultAlignment: yy.Spot.Left
+                    },
+                    _$(yy.TextBlock, // label
+                        {
+                            margin: 3,
+                            editable: true
+                        },
+                        new yy.Binding("text", "annotationContent").makeTwoWay()),
+                    new yy.Binding("alignment", "isSubGraphExpanded", function(s) {
+                        return s ? yy.Spot.TopLeft : yy.Spot.Center;
+                    }),
+                    // create a placeholder to represent the area where the contents of the group are
+                    _$(yy.Placeholder, {
+                        padding: new yy.Margin(10, 10)
+                    }),
+                    makeMarkerPanel(true, 1) // sub-process,  loop, parallel, sequential, ad doc and compensation markers
+                ) // end Vertical Panel
+            )
+        ); // end Group
+
+    // square off the default button
+    function fixExpandBtn(panel, subgraphBtn) {
+        var sgBtn = panel.findObject(subgraphBtn);
+        var border = sgBtn.findObject("ButtonBorder");
+        if (border instanceof yy.Shape) {
+            border.figure = "Rectangle";
+            border.spot1 = new yy.Spot(0, 0, 2, 2);
+            border.spot2 = new yy.Spot(1, 1, -2, -2);
+        }
+    }
+
+    fixExpandBtn(subProcessGroupTemplate, "subExpandBtn");
+
+    var grouptemplmap = new yy.Map("string", yy.Group);
+    var nodePanel = {
+        background: "transparent",
+        ungroupable: true,
+        // highlight when dragging into the Group
+        // mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+        // mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+        computesBoundsAfterDrag: true,
+        // when the selection is dropped into a Group, add the selected Parts into that Group;
+        // if it fails, cancel the tool, rolling back any changes
+        // mouseDrop: finishDrop,
+        // Groups containing Nodes lay out their members vertically
+    };
+    Object.defineProperty(nodePanel, 'layout', {
+        get: function() {
+            return _$(yy.GridLayout, {
+                wrappingColumn: 1,
+                alignment: yy.GridLayout.Position,
+                cellSize: new yy.Size(1, 1),
+                spacing: new yy.Size(4, 4)
+            })
+        }
+    });
+    
+    var groupMenu =
+        _$(yy.Adornment, "Vertical",
+                _$("ContextMenuButton",
+                    _$(yy.TextBlock, "Convert to library", {
+                        margin: 3
+                    }), {
+                        click: function(e, obj) {
+                        	var myPartsList = new yy.List();
+                        	var members = obj.part.ob.memberParts;
+                            while(members.next()){
+                                myPartsList.add(members.value);
+                            }
+                        	var canvasImg = myDiagram.makeImage({
+                        		  parts: myPartsList
+                        	});
+                        	myPalette2.add(
+                        		    _$(yy.Part, "Vertical",{
+                      		    	  resizable:true
+                        		    },
+                        		      _$(yy.Picture, { 
+                        		    	  desiredSize: new yy.Size(80, 80), 
+                        		    	  source: canvasImg.src
+                        		      })
+                        		    ));
+                        }
+                    }));
+    grouptemplmap.add("subprocess", subProcessGroupTemplate);
+    grouptemplmap.add("OfNodes",
+        _$(yy.Group, "Spot", {
+                resizable: true,
+                ungroupable: true,
+                contextMenu: groupMenu
+            },
+            _$(yy.Panel, yy.Panel.Vertical,
+                _$(yy.Placeholder, {
+                        padding: 5,
+                        alignment: yy.Spot.TopLeft
+                    },
+                    new yy.Binding("background", "isHighlighted", function(h) {
+                        return h ? "red" : "transparent";
+                    }).ofObject())
+            ), // end Vertical Panel
+            _$(yy.Shape, "Rectangle", {
+                isPanelMain: true,
+                fill: null,
+                stroke: null
+            })
+        ));
+    myDiagram.groupTemplateMap = grouptemplmap;
+
+    //------------------------------------------  Node Template Map   ----------------------------------------------
+    function showPorts(node, show) {
+        var diagram = node.diagram;
+        if (!diagram || diagram.isReadOnly || !diagram.allowLink)
+            return;
+        node.ports.each(function(port) {
+            port.stroke = (show ? "white" : null);
+        });
+    }
+
+    function nodeStyle() {
+        return [
+            // The Node.location comes from the "loc" property of the node data,
+            // converted by the Point.parse static method.
+            // If the Node.location is changed, it updates the "loc" property of the node data,
+            // converting back using the Point.stringify static method.
+            new yy.Binding("location", "loc", yy.Point.parse).makeTwoWay(yy.Point.stringify), {
+                // the Node.location is at the center of each node
+                locationSpot: yy.Spot.Center,
+                //isShadowed: true,
+                //shadowColor: "#888",
+                // handle mouse enter/leave events to show/hide the ports
+                mouseEnter: function(e, obj) {
+                    showPorts(obj.part, true);
+                },
+                mouseLeave: function(e, obj) {
+                    showPorts(obj.part, false);
+                }
+            }
+        ];
+    }
+    // create the nodeTemplateMap, holding main view node templates:
+    var templmap = new yy.Map("string", yy.Node);
+    // for each of the node categories, specify which template to use
+    templmap.add("activity", activityNodeTemplate);
+    templmap.add("event", eventNodeTemplate);
+    templmap.add("gateway", gatewayNodeTemplate);
+    templmap.add("annotation", annotationNodeTemplate);
+    templmap.add("privateProcess", privateProcessNodeTemplate);
+    // for the default category, "", use the same template that Diagrams use by default
+    // this just shows the key value as a simple TextBlock
+    templmap.add("", myDiagram.nodeTemplate);
+    templmap.add("Comment",
+        _$(yy.Node, "Auto", nodeStyle(),
+            _$(yy.Shape, "File", {
+                fill: "transparent",
+                stroke: null
+            }),
+            _$(yy.TextBlock, {
+                    margin: 5,
+                    maxSize: new yy.Size(200, NaN),
+                    wrap: yy.TextBlock.WrapFit,
+                    textAlign: "center",
+                    editable: true,
+                    font: "bold 12pt Helvetica, Arial, sans-serif",
+                    stroke: '#454545',
+                    text: "Text"
+                },
+                new yy.Binding("text", "annotationContent").makeTwoWay())
+            // no ports, because no links are allowed to connect with a comment
+        ));
+
+    myDiagram.nodeTemplateMap = templmap;
+    //YY;
+    // create the nodeTemplateMap, holding special palette "mini" node templates:
+    var palTemplateMap = new yy.Map("string", yy.Node);
+    palTemplateMap.add("activity", activityNodeTemplateForPalette);
+    palTemplateMap.add("event", eventNodeTemplate);
+    palTemplateMap.add("gateway", gatewayNodeTemplateForPalette);
+    palTemplateMap.add("annotation", annotationNodeTemplate);
+    palTemplateMap.add("privateProcess", privateProcessNodeTemplateForPalette);
+    palTemplateMap.add("Comment",
+        _$(yy.Node, "Auto", nodeStyle(),
+            _$(yy.Shape, "Rectangle", {
+                fill: "transparent",
+                stroke: null,
+                width: 60,
+                height: 30
+            }),
+            _$(yy.TextBlock, {
+                    margin: 5,
+                    maxSize: new yy.Size(200, NaN),
+                    wrap: yy.TextBlock.WrapFit,
+                    textAlign: "center",
+                    editable: true,
+                    font: "bold 12pt Helvetica, Arial, sans-serif",
+                    stroke: '#454545',
+                    text: "Text"
+                },
+                new yy.Binding("text", "annotationContent").makeTwoWay())
+            // no ports, because no links are allowed to connect with a comment
+        ));
+    var palGroupTemplateMap = new yy.Map("string", yy.Group);
+    palGroupTemplateMap.add("subprocess", subProcessGroupTemplateForPalette);
+
+    //------------------------------------------  Link Templates   ----------------------------------------------
+
+    var sequenceLinkTemplate =
+        _$(yy.Link, {
+                contextMenu: _$(yy.Adornment, "Vertical",
+                    _$("ContextMenuButton",
+                        _$(yy.TextBlock, "Default Flow"),
+                        // in the click event handler, the obj.part is the Adornment; its adornedObject is the port
+                        {
+                            click: function(e, obj) {
+                                setSequenceLinkDefaultFlow(obj.part.adornedObject);
+                            }
+                        }),
+                    _$("ContextMenuButton",
+                        _$(yy.TextBlock, "Conditional Flow"),
+                        // in the click event handler, the obj.part is the Adornment; its adornedObject is the port
+                        {
+                            click: function(e, obj) {
+                                setSequenceLinkConditionalFlow(obj.part.adornedObject);
+                            }
+                        })
+                ),
+                routing: yy.Link.AvoidsNodes,
+                curve: yy.Link.JumpGap,
+                corner: 10,
+                reshapable: true,
+                relinkableFrom: true,
+                relinkableTo: true,
+                toEndSegmentLength: 20
+            },
+            new yy.Binding("points").makeTwoWay(),
+            _$(yy.Shape, {
+                isPanelMain: true,
+                stroke: "black",
+                strokeWidth: 1
+            }),
+            _$(yy.Shape, {
+                toArrow: "Triangle",
+                scale: 1.2,
+                fill: "black",
+                stroke: null
+            }),
+            _$(yy.Shape, {
+                    fromArrow: "",
+                    scale: 1.5,
+                    stroke: "black",
+                    fill: "white"
+                },
+                new yy.Binding("fromArrow", "isDefault", function(s) {
+                    if (s === null)
+                        return "";
+                    return s ? "BackSlash" : "StretchedDiamond";
+                }),
+                new yy.Binding("segmentOffset", "isDefault", function(s) {
+                    return s ? new yy.Point(5, 0) : new yy.Point(0, 0);
+                })),
+            _$(yy.TextBlock, { // this is a Link label
+                    name: "Label",
+                    editable: true,
+                    text: "label",
+                    segmentOffset: new yy.Point(-10, -10),
+                    visible: false
+                },
+                new yy.Binding("text", "text").makeTwoWay(),
+                new yy.Binding("visible", "visible").makeTwoWay())
+        );
+
+    // set Default Sequence Flow (backslash From Arrow)
+    function setSequenceLinkDefaultFlow(obj) {
+        myDiagram.startTransaction("setSequenceLinkDefaultFlow");
+        var model = myDiagram.model;
+        model.setDataProperty(obj.data, "isDefault", true);
+        // Set all other links from the fromNode to be isDefault=null
+        obj.fromNode.findLinksOutOf().each(function(link) {
+            if (link !== obj && link.data.isDefault) {
+                model.setDataProperty(link.data, "isDefault", null);
+            }
+        });
+        myDiagram.commitTransaction("setSequenceLinkDefaultFlow");
+    }
+
+    // set Conditional Sequence Flow (diamond From Arrow)
+    function setSequenceLinkConditionalFlow(obj) {
+        myDiagram.startTransaction("setSequenceLinkConditionalFlow");
+        var model = myDiagram.model;
+        model.setDataProperty(obj.data, "isDefault", false);
+        myDiagram.commitTransaction("setSequenceLinkConditionalFlow");
+    }
+
+    var messageFlowLinkTemplate =
+        _$(PoolLink, // defined in BPMNClasses.js
+            {
+                routing: yy.Link.Orthogonal,
+                curve: yy.Link.JumpGap,
+                corner: 10,
+                reshapable: true,
+                relinkableTo: true,
+                toEndSegmentLength: 20
+            },
+            new yy.Binding("points").makeTwoWay(),
+            _$(yy.Shape, {
+                isPanelMain: true,
+                stroke: "black",
+                strokeWidth: 1,
+                strokeDashArray: [6, 2]
+            }),
+            _$(yy.Shape, {
+                toArrow: "Triangle",
+                scale: 1,
+                fill: "white",
+                stroke: "black"
+            }),
+            _$(yy.Shape, {
+                fromArrow: "Circle",
+                scale: 1,
+                visible: true,
+                stroke: "black",
+                fill: "white"
+            }),
+            _$(yy.TextBlock, {
+                    editable: true,
+                    text: "label"
+                }, // Link label
+                new yy.Binding("text", "text").makeTwoWay())
+        );
+
+    var dataAssociationLinkTemplate =
+        _$(yy.Link, {
+                routing: yy.Link.AvoidsNodes,
+                curve: yy.Link.JumpGap,
+                corner: 10,
+                reshapable: true,
+                relinkableFrom: true,
+                relinkableTo: true
+            },
+            new yy.Binding("points").makeTwoWay(),
+            _$(yy.Shape, {
+                stroke: "black",
+                strokeWidth: 1,
+                strokeDashArray: [1, 3]
+            }),
+            _$(yy.Shape, {
+                toArrow: "OpenTriangle",
+                scale: 1,
+                fill: null,
+                stroke: "blue"
+            })
+        );
+
+    var annotationAssociationLinkTemplate =
+        _$(yy.Link, {
+                reshapable: true,
+                relinkableFrom: true,
+                relinkableTo: true,
+                toEndSegmentLength: 20,
+                fromEndSegmentLength: 40
+            },
+            new yy.Binding("points").makeTwoWay(),
+            _$(yy.Shape, {
+                stroke: "black",
+                strokeWidth: 1,
+                strokeDashArray: [1, 3]
+            }),
+            _$(yy.Shape, {
+                toArrow: "OpenTriangle",
+                scale: 1,
+                stroke: "black"
+            })
+        );
+
+    // in BPMN, can't like across subprocess boundaries.
+    function sameLevel(fromnode, fromport, tonode, toport) {
+        return fromnode.containingGroup === tonode.containingGroup;
+    }
+
+    var linkTemplateMap = new yy.Map("string", yy.Link);
+    linkTemplateMap.add("msg", messageFlowLinkTemplate);
+    linkTemplateMap.add("annotation", annotationAssociationLinkTemplate);
+    linkTemplateMap.add("data", dataAssociationLinkTemplate);
+    linkTemplateMap.add("", sequenceLinkTemplate); // default
+
+    myDiagram.linkTemplateMap = linkTemplateMap;
+
+    //------------------------------------------  Diagram Listeners   ----------------------------------------------
+
+    myDiagram.addDiagramListener("LinkDrawn", function(e) {
+        if (e.subject.fromNode.category === "annotation") {
+            e.subject.category = "annotation"; // annotation association
+        }
+    });
+
+    myDiagram.addDiagramListener("ExternalObjectsDropped", function(e) {
+        // e.subject is the collection that was just dropped
+        e.subject.each(function(part) {
+            if (part instanceof yy.Node && part.data.item === "end") {
+                part.moveTo(part.location.x + 350, part.location.y)
+            }
+        });
+        myDiagram.commandHandler.expandSubGraph();
+    });
+
+    // change the title to indicate that the diagram has been modified
+    myDiagram.addDiagramListener("Modified", function(e) {
+        var currentFile = document.getElementById("currentFile");
+        var idx = currentFile.textContent.indexOf("*");
+        if (myDiagram.isModified) {
+            if (idx < 0)
+                currentFile.textContent = currentFile.textContent + "*";
+        } else {
+            if (idx >= 0)
+                currentFile.textContent = currentFile.textContent.substr(0, idx);
+        }
+    });
+
+    //------------------------------------------  Palette   ----------------------------------------------
+    //YY;
+    // default structures
+    var myPalette1 =
+        _$(yy.Palette, "myPalette1", {
+            nodeTemplateMap: palTemplateMap,
+            groupTemplateMap: palGroupTemplateMap,
+            "contextMenuTool.isEnabled": false, // but disable context menus
+            allowZoom: false,
+            layout: _$(yy.GridLayout, {
+                cellSize: new yy.Size(2, 2),
+                wrappingColumn: 2,
+                spacing: new yy.Size(10, 10)
+            })
+        }); // end Palette
+    var nodeDataArrayForPalettel = [{
+            key: 11,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 0,
+            busType: "Output"
+        }, {
+            key: 12,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 1,
+            size: '70 60',
+            busType: "Output"
+        },
+
+        {
+            key: 14,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 2,
+            busType: "Output"
+        }, {
+            key: 15,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 3,
+            busType: "Output"
+        }, {
+            key: 16,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 4,
+            busType: "Output"
+        }, {
+            key: 17,
+            category: "activity",
+            text: "",
+            item: "generic task",
+            taskType: 0,
+            shapeType: 5,
+            busType: "Output"
+        }, {
+            key: 18,
+            category: "Comment",
+            text: "Text",
+            busType: "TEXT"
+        }
+    ];
+
+    var level1 = _$(yy.GraphLinksModel, {
+        nodeDataArray: nodeDataArrayForPalettel
+    }); // end model
+
+    myPalette1.model = level1;
+
+    window.myPalette2 =
+        _$(yy.Palette, "myPalette2", {
+            nodeTemplateMap: palTemplateMap,
+            groupTemplateMap: palGroupTemplateMap,
+            "contextMenuTool.isEnabled": false, // but disable context menus
+            allowZoom: false,
+            layout: _$(yy.GridLayout, {
+                cellSize: new yy.Size(2, 2),
+                wrappingColumn: 2,
+                spacing: new yy.Size(10, 10)
+            })
+        }); // end Palette
+
+    var level2 = _$(yy.GraphLinksModel, {
+        nodeDataArray: [{
+                key: 101,
+                category: "activity",
+                text: "",
+                item: "Start",
+                taskType: 0,
+                shapeType: 0,
+                color: gradLightGreen,
+                busType: "SOI"
+            }, {
+                key: 104,
+                category: "activity",
+                text: "",
+                item: "End",
+                taskType: 0,
+                shapeType: 0,
+                color: gradLightRed,
+                busType: "EOI"
+            }, {
+                key: 801,
+                loc: "0 0",
+                text: "",
+                isGroup: true,
+                isSubProcess: true,
+                category: "subprocess",
+                taskType: 0,
+                busType: "SubProcess"
+            }, {
+                key: 111,
+                category: "event",
+                eventType: 11,
+                eventDimension: 1,
+                text: "",
+                item: "OR",
+                busType: "OR",
+                color: gradLightGreen
+            }, {
+                key: 112,
+                category: "event",
+                eventType: 12,
+                eventDimension: 6,
+                text: "",
+                item: "AND",
+                busType: "AND",
+                color: gradLightGreen
+            }, {
+                key: 201,
+                category: "gateway",
+                text: "",
+                gatewayType: 0,
+                busType: "Condition",
+                size: '70 70'
+            }] // end nodeDataArray
+    }); // end model
+
+    myPalette2.model = level2;
+
+    //------------------------------------------  Overview   ----------------------------------------------
+
+    var myOverview =
+        _$(yy.Overview, "myOverview", {
+            observed: myDiagram,
+            maxScale: 0.5,
+            contentAlignment: yy.Spot.Center
+        });
+    // change color of viewport border in Overview
+    myOverview.box.elt(0).stroke = "dodgerblue";
+
+    // start with a blank canvas:
+    // myDiagram.isModified = false;
+    // newDocument();
+
+    // start with a simple preset model:
+    loadModel();
+} // end init
+
+// When copying a node, we need to copy the data that the node is bound to.
+// This JavaScript object includes properties for the node as a whole, and
+// four properties that are Arrays holding data for each port.
+// Those arrays and port data objects need to be copied too.
+
+function copyNodeData(data) {
+    var copy = {};
+    for(var name in data){
+    	var val = data[name];
+    	if(typeof val !== 'undefined'){
+    		copy[name] = data[name];
+    	}
+    }
+    if (data.isGroup) {
+        copy.isGroup = true;
+    }
+    if (data.category === "activity" || data.category === "subprocess") {
+        copy.boundaryEventArray = copyBoundaryEventArray(data.boundaryEventArray);
+    }
+    // if you add data properties, you should copy them here too
+    return copy;
+}
+
+function copyBoundaryEventArray(arr) {
+    var copy = [];
+    if (Array.isArray(arr)) {
+        for (var i = 0; i < arr.length; i++) {
+            copy.push(copyBoundaryEventData(arr[i]));
+        }
+    }
+    return copy;
+}
+
+function copyBoundaryEventData(data) {
+    var copy = {};
+    copy.portId = data.portId;
+    copy.alignmentIndex = data.alignmentIndex;
+    copy.eventType = data.eventType;
+    copy.color = data.color;
+    // if you add BoundaryEvent data properties, you should copy them here too
+    return copy;
+}
+
+//------------------------------------------  Commands for this application  ----------------------------------------------
+
+// Add a port to the specified side of the selected nodes.   name is beN  (be0, be1)
+function addActivityNodeBoundaryEvent(evType) {
+    myDiagram.startTransaction("addBoundaryEvent");
+    myDiagram.selection.each(function(node) {
+        // skip any selected Links
+        if (!(node instanceof yy.Node))
+            return;
+        if (node.data.category === "activity" || node.data.category === "subprocess") {
+            // compute the next available index number for the side
+            var i = 0;
+            var defaultPort = node.findPort("");
+            while (node.findPort("be" + i.toString()) !== defaultPort)
+                i++; // now this new port name is unique within the whole Node because of the side prefix
+            var name = "be" + i.toString();
+            // get the Array of port data to be modified
+            var arr = node.data["boundaryEventArray"];
+            if (arr) {
+                // create a new port data object
+                var newportdata = {
+                    portId: name,
+                    eventType: evType,
+                    color: "white",
+                    alignmentIndex: i
+                        // if you add port data properties here, you should copy them in copyPortData above
+                };
+                // and add it to the Array of port data
+                myDiagram.model.insertArrayItem(arr, -1, newportdata);
+            }
+        }
+    });
+    myDiagram.commitTransaction("addBoundaryEvent");
+}
+
+// changes the item of the object
+function rename(obj) {
+    myDiagram.startTransaction("rename");
+    var newName = prompt("Rename " + obj.part.data.item + " to:");
+    myDiagram.model.setDataProperty(obj.part.data, "item", newName);
+    myDiagram.commitTransaction("rename");
+}
+
+// shows/hides gridlines
+// to be implemented onclick of a button
+function updateGridOption() {
+    myDiagram.startTransaction("grid");
+    var grid = document.getElementById("grid");
+    myDiagram.grid.visible = grid.checked;
+    myDiagram.commitTransaction("grid");
+}
+
+// enables/disables snapping tools, to be implemented by buttons
+function updateSnapOption() {
+    // no transaction needed, because we are modifying tools for future use
+    var snap = document.getElementById("snap");
+    if (snap.checked) {
+        myDiagram.toolManager.draggingTool.isGridSnapEnabled = true;
+        myDiagram.toolManager.resizingTool.isGridSnapEnabled = true;
+    } else {
+        myDiagram.toolManager.draggingTool.isGridSnapEnabled = false;
+        myDiagram.toolManager.resizingTool.isGridSnapEnabled = false;
+    }
+}
+
+// user specifies the amount of space between nodes when making rows and column
+function askSpace() {
+    var space = prompt("Desired space between nodes (in pixels):", "0");
+    return space;
+}
+
+var UnsavedFileName = "(Unsaved File)";
+
+function getCurrentFileName() {
+    var currentFile = document.getElementById("currentFile");
+    var name = currentFile.textContent;
+    if (name[name.length - 1] === "*")
+        return name.substr(0, name.length - 1);
+    return name;
+}
+
+function setCurrentFileName(name) {
+    var currentFile = document.getElementById("currentFile");
+    if (myDiagram.isModified) {
+        name += "*";
+    }
+    currentFile.textContent = name;
+}
+
+function newDocument() {
+    $('#processId').val('');
+
+    // checks to see if all changes have been saved
+    if (myDiagram.isModified) {
+        var save = confirm("Would you like to save changes to " + getCurrentFileName() + "?");
+        if (save) {
+            saveDocument();
+        }
+    }
+    setCurrentFileName(UnsavedFileName);
+    // loads an empty diagram
+    myDiagram.model = new yy.GraphLinksModel();
+    myDiagram.model.undoManager.isEnabled = true;
+    myDiagram.isModified = false;
+    ModelReset();
+}
+
+function ModelReset() {
+    myDiagram.model.undoManager.isEnabled = true;
+    myDiagram.model.linkFromPortIdProperty = "fromPort";
+    myDiagram.model.linkToPortIdProperty = "toPort";
+
+    myDiagram.isModified = false;
+    // Customize the node data copying function
+    // to avoid sharing of port data arrays and of the port data themselves.
+    // (Functions cannot be written/read in JSON format.)
+    myDiagram.model.copyNodeDataFunction = copyNodeData;
+}
+
+function checkLocalStorage() {
+    return (typeof(Storage) !== "undefined") && (window.localStorage !== undefined);
+}
+
+function saveToServer() {
+    saveModel();
+    $.ajax({
+        url: '/blst/web/processController/updateProcessContent',
+        type: 'post',
+        data: {
+        	processId: Number($('#processId').val()),
+        	processContent: $('#mySavedModel').val()
+        },
+        success: function(data) {
+            alert("Successful");
+        },
+        error: function(ex) {
+            throw ex.statusText;
+        }
+    });
+}
+
+function downloadAsPicture() {
+    var canvas = $("#myDiagram canvas")[0];
+    canvas.toBlob(function(blob) {
+        saveAs(
+            blob,
+            "diagram.png"
+        );
+    }, "image/png");
+}
+
+function loadFromJson() {
+    var jsonString = prompt("Load from json", 'Please paste json string');
+    if (jsonString) {
+        loadModel(jsonString);
+    }
+}
+
+// saves the current floor plan to local storage
+function saveDocument() {
+    if (checkLocalStorage()) {
+        var saveName = getCurrentFileName();
+        if (saveName === UnsavedFileName) {
+            saveDocumentAs();
+        } else {
+            saveDiagramProperties()
+            window.localStorage.setItem(saveName, myDiagram.model.toJson());
+            myDiagram.isModified = false;
+        }
+    }
+    alert("Successful");
+}
+
+// saves floor plan to local storage with a new name
+function saveDocumentAs() {
+    if (checkLocalStorage()) {
+        var saveName = prompt("Save file as...", getCurrentFileName());
+        if (saveName && saveName !== UnsavedFileName) {
+            setCurrentFileName(saveName);
+            saveDiagramProperties()
+            window.localStorage.setItem(saveName, myDiagram.model.toJson());
+            myDiagram.isModified = false;
+        }
+    }
+}
+
+// checks to see if all changes have been saved -> shows the open HTML element
+function openDocument() {
+    if (checkLocalStorage()) {
+        if (myDiagram.isModified) {
+            var save = confirm("Would you like to save changes to " + getCurrentFileName() + "?");
+            if (save) {
+                saveDocument();
+            }
+        }
+        openElement("openDocument", "mySavedFiles");
+    }
+}
+
+// shows the remove HTML element
+function removeDocument() {
+    if (checkLocalStorage()) {
+        openElement("removeDocument", "mySavedFiles2");
+    }
+}
+
+// these functions are called when panel buttons are clicked
+
+function loadFile() {
+    var listbox = document.getElementById("mySavedFiles");
+    // get selected filename
+    var fileName = undefined;
+    for (var i = 0; i < listbox.options.length; i++) {
+        if (listbox.options[i].selected)
+            fileName = listbox.options[i].text; // selected file
+    }
+    if (fileName !== undefined) {
+        // changes the text of "currentFile" to be the same as the floor plan now loaded
+        setCurrentFileName(fileName);
+        // actually load the model from the JSON format string
+        var savedFile = window.localStorage.getItem(fileName);
+        myDiagram.model = yy.Model.fromJson(savedFile);
+        myDiagram.model.undoManager.isEnabled = true;
+        myDiagram.isModified = false;
+        // eventually loadDiagramProperties will be called to finish
+        // restoring shared saved model/diagram properties
+    }
+    closeElement("openDocument");
+}
+
+// Store shared model state in the Model.modelData property
+function saveDiagramProperties() {
+    myDiagram.model.modelData.position = yy.Point.stringify(myDiagram.position);
+}
+
+// NOT directly by loadFile.
+function loadDiagramProperties(e) {
+    var pos = myDiagram.model.modelData.position;
+    if (pos)
+        myDiagram.position = yy.Point.parse(pos);
+}
+
+// deletes the selected file from local storage
+function removeFile() {
+    var listbox = document.getElementById("mySavedFiles2");
+    // get selected filename
+    var fileName = undefined;
+    for (var i = 0; i < listbox.options.length; i++) {
+        if (listbox.options[i].selected)
+            fileName = listbox.options[i].text; // selected file
+    }
+    if (fileName !== undefined) {
+        // removes file from local storage
+        window.localStorage.removeItem(fileName);
+        // the current document remains open, even if its storage was deleted
+    }
+    closeElement("removeDocument");
+}
+
+function updateFileList(id) {
+    // displays cached floor plan files in the listboxes
+    var listbox = document.getElementById(id);
+    // remove any old listing of files
+    var last;
+    while (last = listbox.lastChild)
+        listbox.removeChild(last);
+    // now add all saved files to the listbox
+    for (var key in window.localStorage) {
+        var storedFile = window.localStorage.getItem(key);
+        if (!storedFile)
+            continue;
+        var option = document.createElement("option");
+        option.value = key;
+        option.text = key;
+        listbox.add(option, null);
+    }
+}
+
+function openElement(id, listid) {
+    var panel = document.getElementById(id);
+    if (panel.style.visibility === "hidden") {
+        updateFileList(listid);
+        panel.style.visibility = "visible";
+    }
+}
+
+// hides the open/remove elements when the "cancel" button is pressed
+function closeElement(id) {
+    var panel = document.getElementById(id);
+    if (panel.style.visibility === "visible") {
+        panel.style.visibility = "hidden";
+    }
+}
+
+function downloadAsJson() {
+    var get_blob = function() {
+        return window.Blob;
+    }
+    var BB = get_blob();
+    var str = myDiagram.model.toJson();
+    saveAs(
+        new BB(
+            [str], {
+                type: "text/plain;charset=" + document.characterSet
+            }
+        ), "data.txt"
+    );
+}
+
+// save a model to and load a model from Json text, displayed below the Diagram
+function saveModel() {
+    var str = myDiagram.model.toJson();
+    document.getElementById("mySavedModel").value = str;
+}
+function convertRecord(record){
+    var nodeDataArray = record.nodeDataArray;
+    var paramRequired = [
+    {name: 'busType', defaultVal: 'Output'},
+    {name: 'color', defaultVal: defaultNodeFill},
+    ];
+    if(nodeDataArray){
+        nodeDataArray.forEach(function(e){
+            var busType;
+            for(var i = 0, d; i < paramRequired.length; i++){
+                d = paramRequired[i];
+            if(typeof e[d.name] === 'undefined'){
+                e[d.name] = d.defaultVal;
+            }
+            if(e.busType === 'SOI' || e.annotationContent === 'Start'){
+                e.color = gradLightGreen;
+            }
+            if(e.busType === 'EOI' || e.annotationContent === 'End'){
+                e.color = gradLightRed;
+            }
+        }
+        });
+    }
+}
+function loadModel(str) {
+    var jsonString = $('#mySavedModel').val();
+
+    function updateModel(str) {
+        if (str !== "") {
+            var record = yy.Model.fromJson(str);
+            convertRecord(record);
+            myDiagram.model = record;
+            // moving and linking Nodes, and deletions, can be undone with ctrl-z
+            myDiagram.undoManager.isEnabled = true;
+            ModelReset();
+        }
+    }
+    if (str) {
+        updateModel(str);
+        return;
+    }
+    $.ajax({
+        url: 'getProcessForJSON',
+        data: {
+            processId: Number($('#processId').val())
+        },
+        type: 'get',
+        dataType: 'text',
+        success: function(str) {
+            if (str == "EMPTY") {
+                str = loadStaticMode();
+            }
+            updateModel(str);
+        },
+        error: function(ex) {
+            var str = jsonString;
+            updateModel(str);
+        }
+    });
+}
+
+function loadStaticMode() {
+    $.ajax({
+        url: 'process-data.json',
+        type: 'get',
+        dataType: 'text',
+        success: function(data) {
+            if (data !== "") {
+                return data;
+            }
+        },
+        eror: function(ex) {
+            throw ex;
+        }
+    });
+}
+
+function PathServer(linkData) {
+    var path = [];
+    var me = this;
+    this.linkData = linkData;
+    this.previousPaths = [];
+    this.nextPaths = [];
+    this.findSblingNodeKey = findSblingNodeKey;
+    this.getAllPathsForKey = getAllPathsForKey;
+    this.findSblingPaths = findSblingPaths;
+
+    function findSblingNodeKey(key, linkData, type) {
+        var arr = [];
+        var k1, k2;
+        type === 'next' && (k1 = 'from', k2 = 'to');
+        type === 'pre' && (k1 = 'to', k2 = 'from');
+        for (var i = 0, len = me.linkData.length, item, index; i < len; i++) {
+            item = linkData[i];
+            if (item[k1] === key) {
+                arr.push(item[k2]);
+            }
+        }
+        return arr;
+    }
+
+    function findSblingPaths(key, linkData, type) {
+        try {
+            path.push(key);
+            var previous = findSblingNodeKey(key, linkData, type);
+            if (previous && previous.length === 0) {
+                (type === 'pre' ? me.previousPaths : me.nextPaths).push(path.join(','));
+            }
+            for (var i = 0, len = previous.length, item; i < len; i++) {
+                item = previous[i];
+                findSblingPaths(item, linkData, type);
+            }
+        } catch (ex) {
+            console.log(ex);
+        } finally {
+            path.pop();
+        }
+    }
+
+    function contactLinks(preLinks, nextLinks) {
+        var array = [];
+        for (var i = 0, len1 = preLinks.length, item1, arr1 = [], m; i < len1; i++) {
+            item1 = preLinks[i].split(',');
+            m = item1.length;
+            while (--m) {
+                arr1.push(item1[m]);
+            }
+            item1 = arr1.join(',') + ',';
+            for (var n = 0, len2 = nextLinks.length, item2; n < len2; n++) {
+                item2 = nextLinks[n];
+                array.push(item1 + item2);
+            }
+            arr1 = [], item1 = null;
+        }
+        return array;
+    }
+
+    function getAllPathsForKey(key) {
+        findSblingPaths(key, me.linkData, 'pre');
+        findSblingPaths(key, me.linkData, 'next');
+        return contactLinks(me.previousPaths, me.nextPaths);
+    }
+}
+
+function changeNodeProperty(event) {
+    var targetElement = $(event.target);
+    var inputVal = targetElement.val();
+    var inputName = targetElement.attr('name');
+    var nodeKey;
+    var nodeData = myDiagram.model.nodeDataArray;
+
+    function getNodeData() {
+        for (var i = 0; i < nodeData.length; i++) {
+            var item = nodeData[i];
+            if (item.key === Number(nodeKey)) {
+                return item;
+            }
+        }
+    }
+    nodeKey = $('input[name=key]').val();
+    myDiagram.model.startTransaction('changeProperty');
+    myDiagram.model.setDataProperty(getNodeData(), inputName, inputVal);
+    myDiagram.model.commitTransaction('changeProperty');
+};
+putNodeProperty = function(data, keys) {
+    var defaultKeys = ['key', 'textDiscription', 'category', 'item', 'shapePositionX', 'shapePositionY'];
+    var $inputWraper = jQuery('#configurationPanelBar');
+    var k = keys || defaultKeys;
+    for (var i = 0, len = k.length, item; i < len; i++) {
+        item = k[i];
+        var d = data[item];
+        item === 'shapePositionX' && (d = data['loc'].split(' ')[0]);
+        item === 'shapePositionY' && (d = data['loc'].split(' ')[1]);
+        item === 'textDiscription' && (d = data['annotationContent']);
+        var e = $inputWraper.find('[id=' + item + ']');
+        if(i === 1 || i === 4 || i === 5){
+            e.parent().find('input').val(d);
+            continue;
+        }
+        e.val(d);
+    }
+};
+
+function findGroupForNode(node, nodeDataArray, myDiagram) {
+    var data = node.data;
+    var node = null;
+    var groupName = "OfNodes";
+    if (data.group) {
+        nodeDataArray.forEach(function(v, i) {
+            v.isGroup && v.key === data.group && (node = myDiagram.findNodeForData(v))
+            return false
+        });
+    }
+    return node;
+}
+
+function changeSelectionColor(color, myDiagram) {
+    var i = myDiagram.selection.iterator;
+    var d;
+    var nodeData = myDiagram.model.nodeDataArray;
+    var _$ = yy.GraphObject.make;
+
+    function convertColor(colorStr) {
+        if (/^[0-9A-Fa-f]{3,6}/.test(colorStr)) {
+            return '#' + colorStr;
+        }
+        return colorStr;
+    }
+    if ('[object Array]' === Object.prototype.toString.call(color)) {
+        color = _$(yy.Brush, yy.Brush.Linear, {
+            0: convertColor(color[0]),
+            1: convertColor(color[1]),
+        })
+    } else {
+        color = convertColor(color);
+    }
+    while (i.next()) {
+        d = i.value.data;
+        nodeData.forEach(function(e, i) {
+            if (e.key === d.key) {
+                myDiagram.startTransaction('changeColor');
+                myDiagram.model.setDataProperty(e, 'color', color);
+                myDiagram.commitTransaction('changeColor');
+            }
+        });
+    }
+}
+/**===========================This Page=======================================*/
+
+(function() {
+    var toolbarElement = {},
+        parent = {},
+        interval = 0,
+        retryCount = 0,
+        isRemoved = false;
+    if (window.location.protocol === 'file:') {
+        interval = window.setInterval(function() {
+            toolbarElement = document.getElementById('coFrameDiv');
+            if (toolbarElement) {
+                parent = toolbarElement.parentNode;
+                if (parent) {
+                    parent.removeChild(toolbarElement);
+                    isRemoved = true;
+                    if (document.body && document.body.style) {
+                        document.body.style.setProperty('margin-top', '0px', 'important');
+                    }
+                }
+            }
+            retryCount += 1;
+            if (retryCount > 10 || isRemoved) {
+                window.clearInterval(interval);
+            }
+        }, 10);
+    }
+})();
+
+$(function() {
+    init();
+    $('.action-buttons').click(function(e) {
+        var $target = $(e.target);
+        $(this).find('button').removeClass('active');
+        $target.addClass('active');
+        if (/action-link/.test($target.attr('class'))) {
+            myDiagram._actionMode = 'link';
+        }
+        if (/action-select/.test($target.attr('class'))) {
+            myDiagram._actionMode = 'select';
+        }
+        if (/action-move/.test($target.attr('class'))) {
+            myDiagram._actionMode = 'move';
+        }
+        if (/zoom-value\b/.test($target.attr('class'))) {
+            var val = +($target.val()) / 100;
+            myDiagram.scale = val;
+            e.preventDefault();
+            return false;
+        }
+        if (/action-zoomin/.test($target.attr('class'))) {
+            myDiagram.Ze.increaseZoom();
+        }
+        if (/action-zoomout/.test($target.attr('class'))) {
+            myDiagram.Ze.decreaseZoom();
+        }
+        if (/action-grid/.test($target.attr('class'))) {
+            $('input#grid').click();
+            updateGridOption()
+        }
+    });
+
+    $('body').keyup(function(e) {
+        switch (e.keyCode) {
+            case 67:
+                $('button.action-link').click();
+                break;
+            case 86:
+                $('button.action-select').click();
+                break;
+            case 72:
+                $('button.action-move').click();
+                break;
+            default:
+                return false;
+                break;
+        }
+    });
+
+    $('.propertyPanel input').keyup(function(e) {
+        _t && clearTimeout(_t);
+        var _t = setTimeout(function() {
+            changeNodeProperty(e);
+        }, 500);
+    });
+    $('.colorPanel input').keyup(function(e) {
+        _t && clearTimeout(_t);
+        var _t = setTimeout(function() {
+            var target = $(e.target);
+            var val = target.val();
+            if (target.parent().parent().attr('class') === 'gradient-color') {
+                var c1 = $('.color-gradient1').val() || 'ccc';
+                var c2 = $('.color-gradient2').val() || 'ccc';
+                val = [c1, c2];
+                $('.gradient-bar').attr('style', 'background: -webkit-linear-gradient(left, #' + c1 + ', #' + c2 + ');-moz-linear-gradient(left, #' + c1 + ', #' + c2 + ');linear-gradient(top, #' + c1 + ', #' + c2 + ');');
+            }
+            changeSelectionColor(val, myDiagram);
+        }, 500);
+    });
+    $('.tab-trigger').children().each(function(i, e) {
+        $(this).click(function(event) {
+            var c = $('.tab-content').children();
+            c.hide();
+            c.eq(i).show();
+        });
+    });
+   
+
+    $('#sideBar .slide-trigger').click(function(e) {
+        var next = $(this).next();
+        $('.slide-wrapper').each(function(i, e) {
+            if (e === next[0]) {
+                $(e).show();
+            } else {
+                $(e).hide();
+            }
+            $(e).css({
+                position: 'relative',
+                zIndex: 999
+            });
+        });
+    });
+
+    $('#myPalette1').add('#myPalette2').css('top','20px');
+
+    var customEditor = $('<textarea id="customTextEditor" style="width: 100px; height: 100px; border: 1px solid black; background-color:#fff; visibility: hidden;position:absolute; z-index:999;"> </textarea>')[0];
+    $('body').append(customEditor);
+    myDiagram.toolManager.textEditingTool.defaultTextEditor = customEditor;
+    customEditor.onActivate = function() {
+    customEditor.value = customEditor.textEditingTool.textBlock.text;
+    customEditor.style.visibility = "";
+    // Do a few different things when a user presses a key
+    customEditor.addEventListener("keydown", function(e) {
+      var keynum = e.which;
+      var tool = customEditor.textEditingTool;
+      if (tool === null) return;
+      if (keynum == 13) { // Accept on Enter
+        tool.acceptText(yy.TextEditingTool.Enter);
+        return;
+      } else if (keynum == 9) { // Accept on Tab
+        tool.acceptText(yy.TextEditingTool.Tab);
+        e.preventDefault();
+        return false;
+      } else if (keynum === 27) { // Cancel on Esc
+        tool.doCancel();
+        if (tool.diagram) tool.diagram.focus();
+      }
+    }, false);
+
+    var loc = customEditor.textEditingTool.textBlock.getDocumentPoint(yy.Spot.TopLeft);
+    var pos = myDiagram.transformDocToView(loc);
+    customEditor.style.left = (pos.x - 45) + "px";
+    customEditor.style.top  = (pos.y - 35) + "px";
+  }
+
+  
+});
+
+
+
+$(function() {
+            var Shape = kendo.dataviz.diagram.Shape,
+                Connection = kendo.dataviz.diagram.Connection,
+                Rect = kendo.dataviz.diagram.Rect,
+                Point = kendo.dataviz.diagram.Point,
+                selected;
+
+            $("#canvasProperties").on("change", canvasPropertiesChange);
+
+            var layoutMapping = {
+                "TreeDown": {
+                    type: "tree",
+                    subtype: "down"
+                },
+                "TreeUp": {
+                    type: "tree",
+                    subtype: "up"
+                },
+                "TreeLeft": {
+                    type: "tree",
+                    subtype: "left"
+                },
+                "TreeRight": {
+                    type: "tree",
+                    subtype: "right"
+                },
+                "RadialTree": {
+                    type: "tree",
+                    subtype: "radial"
+                },
+                "TipOverTree": {
+                    type: "tree",
+                    subtype: "typeover"
+                },
+                "LayeredHorizontal": {
+                    type: "layered",
+                    subtype: "horizontal"
+                },
+                "LayeredVertical": {
+                    type: "layered",
+                    subtype: "vertial"
+                },
+                "ForceDirected": {
+                    type: "force",
+                    subtype: "directed"
+                },
+                "MindmapVertical": {
+                    type: "tree",
+                    subtype: "mindmapvertical"
+                },
+                "MindmapHorizontal": {
+                    type: "tree",
+                    subtype: "mindmaphorizontal"
+                }
+            };
+
+            function canvasPropertiesChange() {
+                console.log("TODO");
+                
+            }
+
+            $("#shapeProperties").on("change", shapePropertiesChange);
+
+            function shapePropertiesChange(event) {
+                        // var fill = $("#shapeBackgroundColorPicker").getKendoColorPicker().value();
+                        // var strokeColor = $("#shapeStrokeColorPicker").getKendoColorPicker().value();
+                        // var strokeWidth = $("#shapeStrokeWidth").getKendoNumericTextBox().value();
+                        // var locX = $("#shapePositionX").getKendoNumericTextBox().value();
+                        // var locY = $("#shapePositionY").getKendoNumericTextBox().value();
+                        // var width = $("#shapeWidth").getKendoNumericTextBox().value();
+                        // var height = $("#shapeHeight").getKendoNumericTextBox().value();
+                
+                var targetElement = $(event.target);
+    var inputVal = targetElement.val();
+    var inputName = targetElement.attr('class').match(/fk-.*?(?=$|\s)/g)[0].replace('fk-', '');
+    var getPropertyData = function(inputName, inputVal){
+        var map = {
+            shapePositionX: 'loc',
+            shapePositionY: 'loc',
+            textDiscription: 'annotationContent',
+            shapeBackgroundColorPicker: 'color'
+        };
+        var exports = {
+            dataKey: map[inputName],
+            dataValue: null
+        };
+        var i;
+        exports.dataValue = inputVal;
+        if(inputName === 'shapePositionX' && !void(i = 0) || inputName === 'shapePositionY' && !void(i = 1)){
+            var v = itemNodeData.loc.split(' ');
+            v[i] = inputVal;
+            exports.dataValue = v.join(' ');
+        }
+        return exports;
+    };
+    
+    
+    var nodeKey;
+    var nodeData = myDiagram.model.nodeDataArray;
+
+    function getNodeData() {
+        for (var i = 0; i < nodeData.length; i++) {
+            var item = nodeData[i];
+            if (item.key === Number(nodeKey)) {
+                return item;
+            }
+        }
+    }
+    nodeKey = $('input[id=key]').val();
+    var itemNodeData = getNodeData();
+    var resultData = getPropertyData(inputName, inputVal);
+    myDiagram.model.startTransaction('changeProperty');
+    myDiagram.model.setDataProperty(itemNodeData, resultData['dataKey'], resultData['dataValue']);
+    myDiagram.model.commitTransaction('changeProperty');
+                
+            }
+
+            function connectionPropertiesChange() {
+                var elements = selected || [],
+                    options = {
+                        startCap: $("#connectionStartCap").getKendoDropDownList().value(),
+                        endCap: $("#connectionEndCap").getKendoDropDownList().value()
+                    },
+                    element;
+
+                for (i = 0; i < elements.length; i++) {
+                    element = elements[i];
+                    if (element instanceof Connection) {
+                        element.redraw(options);
+                    }
+                }
+            }
+
+            $("#connectionProperties").on("change", connectionPropertiesChange);
+
+            $("#alignConfiguration .configurationButtons").kendoButton({
+                click: function(e) {
+                    
+                }
+            });
+
+            $("#arrangeConfiguration .configurationButtons").kendoButton({
+                click: function (e) {
+                    
+                }
+            });
+
+            $("#diagramZoomIndicator").change(function(e) {
+                var val = +(e.target.value) / 100;
+                myDiagram.scale = val;
+            });
+
+
+            function undo() {
+                myDiagram.commandHandler.undo();
+            }
+
+            function redo() {
+                myDiagram.commandHandler.redo();
+            }
+
+            function copyItem() {
+                myDiagram.commandHandler.copySelection();
+            }
+
+            function pasteItem() {
+                myDiagram.commandHandler.pasteSelection();
+            }
+
+            var actions = {
+                blank: newDocument,
+                open: openDocument,
+                undo: undo,
+                redo: redo,
+                copy: copyItem,
+                paste: pasteItem,
+                saveToLocal: saveDocument,
+                saveToServer: saveToServer,
+                downloadAsPicture: downloadAsPicture,
+                downloadAsJson: downloadAsJson,
+                loadFromJson: loadFromJson
+            };
+
+            $("#menu ul").kendoMenu({
+                dataSource: [
+                    { text: "New", spriteCssClass: "new-item", items: [
+                        { text: "Blank", spriteCssClass: "blank-item", cssClass: "active" }
+                        ]
+                    },
+                    { text: "Open", encoded: false, spriteCssClass: "open-item", cssClass: "upload-item", cssClass: "active"},
+                    { text: "Save", spriteCssClass: "save-item", items: [{ text: "Save to local", encoded: false, spriteCssClass: "save-item", cssClass: "active"},
+                                                                         { text: "Save to server", encoded: false, spriteCssClass: "save-item", cssClass: "active"}]},
+                    { text: "Undo", spriteCssClass: "undo-item", cssClass: "active" },
+                    { text: "Redo", spriteCssClass: "redo-item", cssClass: "active" },
+                    { text: "Copy", spriteCssClass: "copy-item", cssClass: "active" },
+                    { text: "Paste", spriteCssClass: "paste-item", cssClass: "active" },
+                    { text: "Download", spriteCssClass: "download-item", items:[{ text: "Download as picture", spriteCssClass: "download-picture", cssClass: "active" },
+                                                                                { text: "Download as json", spriteCssClass: "download-json", cssClass: "active" }] },
+                    { text: "Load from json", spriteCssClass: "load", cssClass: "active" }
+                ],
+                select: function(e) {
+                    var item = $(e.item),
+                        itemText = item.children(".k-link").text();
+
+                    if (!item.hasClass("active")) {
+                        return;
+                    }
+                    var fn = actions[itemText.charAt(0).toLowerCase() + itemText.slice(1)];
+                    if(!fn){
+                        switch(itemText){
+                            case "Save to local":
+                            fn = actions["saveToLocal"];
+                            break;
+                            case "Save to server":
+                            fn = actions["saveToServer"];
+                            break;
+                            case "Download as picture":
+                            fn = actions["downloadAsPicture"];
+                            break;
+                            case "Download as json":
+                            fn = actions["downloadAsJson"];
+                            break;
+                            case "Load from json":
+                            fn = actions["loadFromJson"];
+                            break;
+                            default:
+                            fn = actions["saveToLocal"];
+                            break;
+                        }
+                    }
+                    fn();
+                }
+            });
+
+            $("#export").on("click", function() {
+                
+            });
+
+            $("#upload").kendoUpload({
+                async: {
+                    saveUrl: "save",
+                    removeUrl: "remove",
+                    autoUpload: true
+                },
+                showFileList: false,
+                localization: {
+                    select: ""
+                },
+                select: function(e) {
+                    if (typeof(FileReader) !== "undefined") {
+                        var f = e.files[0].rawFile,
+                            reader = new FileReader;
+
+                        reader.onload = (function(file) {
+                            return function(e) {
+                                // diagram.load(JSON.parse(e.target.result));
+                            };
+                        })(f);
+
+                        reader.readAsBinaryString(f);
+                    }
+                }
+            });
+
+            $("#splitter").kendoSplitter({
+                panes: [
+                    { collapsible: true, size: "270px", scrollable: false},
+                    { collapsible: false, scrollable: false },
+                    { collapsible: true, size: "300px" }
+                ]
+            });
+
+
+
+
+            function updateShapeProperties(shape) {
+                $("#shapeBackgroundColorPicker").getKendoColorPicker().value(kendo.parseColor(shape.background));
+                $("#shapeStrokeColorPicker").getKendoColorPicker().value(kendo.parseColor(shape.stroke.color));
+                $("#shapeStrokeWidth").getKendoNumericTextBox().value(shape.stroke.width);
+                $("#shapeWidth").getKendoNumericTextBox().value(shape.width);
+                $("#shapeHeight").getKendoNumericTextBox().value(shape.height);
+                $("#shapePositionX").getKendoNumericTextBox().value(shape.x);
+                $("#shapePositionY").getKendoNumericTextBox().value(shape.y);
+            }
+
+            function updateConnectionProperties(shape) {
+                $("#connectionStartCap").getKendoDropDownList().value(shape.startCap);
+                $("#connectionEndCap").getKendoDropDownList().value(shape.endCap);
+            }
+
+            $("#shapesPanelBar").kendoPanelBar({
+                expandMode: "multiple"
+            }).getKendoPanelBar().expand(">li", false);
+
+            $("#configurationPanelBar").kendoPanelBar({
+                expandMode: "multiple"
+            }).getKendoPanelBar().expand(">li", false);
+
+            $(".colorPicker").kendoColorPicker({
+                value: "#ffffff",
+                buttons: false
+            });
+
+            $("#canvasLayout").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [
+                    { value: "TreeDown", text: "Tree Down" },
+                    { value: "TreeUp", text: "Tree Up" },
+                    { value: "TreeLeft", text: "Tree Left" },
+                    { value: "TreeRight", text: "Tree Right" },
+                    { value: "RadialTree", text: "Radial Tree" },
+                    { value: "TipOverTree", text: "Tip-Over Tree" },
+                    { value: "LayeredHorizontal", text: "Layered Horizontal" },
+                    { value: "LayeredVertical", text: "Layered Vertical" },
+                    { value: "ForceDirected", text: "Force directed" },
+                    { value: "MindmapVertical", text: "Mindmap Vertical" },
+                    { value: "MindmapHorizontal", text: "Mindmap Horizontal" }
+                ]
+            });
+
+            $("#connectionStartCap").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [
+                    { value: "None", text: "None" },
+                    { value: "ArrowStart", text: "Arrow Start" },
+                    { value: "ArrowEnd", text: "Arrow End" },
+                    { value: "FilledCircle", text: "Filed Circle" }
+                ]
+            });
+
+            $("#connectionEndCap").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [
+                    { value: "None", text: "None" },
+                    { value: "ArrowStart", text: "Arrow Start" },
+                    { value: "ArrowEnd", text: "Arrow End" },
+                    { value: "FilledCircle", text: "Filed Circle" }
+                ]
+            });
+
+            function updateSliderIndicator(e) {
+                var val = e.value;
+                $("#diagramZoomIndicator").attr("value", val);
+                $("#diagramZoomIndicator").attr("value", val);
+            myDiagram.scale = val / 100;
+            }
+
+            $("#diagramZoom").kendoSlider({
+                min: 10,
+                max: 200,
+                value: 100,
+                smallStep: 10,
+                largeStep: 50,
+                tickPlacement: "none",
+                showButtons: false,
+                change: updateSliderIndicator,
+                slide: updateSliderIndicator
+            });-
+
+            $(".numeric").kendoNumericTextBox();
+
+            $("#window").kendoWindow({
+                visible: false,
+                width: 800,
+                resizable: false,
+                title: "About"
+            });
+
+            $("#about").click(function() {
+                $(".about").getKendoWindow().center().open();
+            });
+
+            $("#shapesPanelBar .shapeItem").kendoDraggable({
+                hint: function() {
+                    return this.element.clone();
+                }
+            });
+
+            $("#textDiscription").kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: [
+                            { text: "End", value: "End" },{ text: "Start", value: "Start" }
+                        ],
+                        filter: "contains",
+                        suggest: true,
+                        index: 1
+                    });
+        });

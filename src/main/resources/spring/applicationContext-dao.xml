@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/jee
+           http://www.springframework.org/schema/jee/spring-jee.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Enable Annotation Configuration -->
+    <context:annotation-config/>
+
+    <!-- Enable Package Scan-->
+    <context:component-scan base-package="com.bosch.dstools.bls.dbservice.impl"/>
+
+    <!-- Enable Annotation -->
+    <tx:annotation-driven/>
+
+    <!-- Configured DataSource -->
+    <bean id="frameworkDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:jboss/bosch_dstools</value>
+        </property>
+    </bean>
+
+    <!-- JDBC Transaction Management-->
+    <bean id="frameworkTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="frameworkDataSource"/>
+        </property>
+    </bean>
+
+    <!-- Transaction Template-->
+    <bean id="frameworkTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager">
+            <ref bean="frameworkTransactionManager"/>
+        </property>
+    </bean>
+
+    <!-- Mybatis Sql Session Factory Configuration-->
+    <bean id="frameworkSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- MyIbatis Configuration File Path -->
+        <property name="configLocation">
+            <value>classpath:mybatis/mybatis-config.xml</value>
+        </property>
+
+        <property name="dataSource">
+            <ref bean="frameworkDataSource"/>
+        </property>
+
+    </bean>
+
+    <!-- Sql Session -->
+    <bean id="frameworkSqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="frameworkSqlSessionFactory" />
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <!-- Thread Safe Sql Session Template-->
+    <bean id="frameworkSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg ref="frameworkSqlSessionFactory"/>
+    </bean>
+
+</beans>

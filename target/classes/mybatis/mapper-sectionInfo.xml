@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosch.dstools.bls.dao.ISectionInfoDao" >
+
+<!-- sectionInfo -->
+	<insert id="addSection" parameterType="com.bosch.dstools.bls.datamodel.SectionInfo" useGeneratedKeys="true" keyProperty="sectionId"> 
+        insert into section (sectionNo, name,createId, pdStatus, createTime, updateTime, pdType, isActive,description) 
+        values(#{sectionNo}, #{name}, #{createId}, #{pdStatus}, #{createTime}, #{updateTime}, #{pdType}, #{isActive}, #{description})  
+    </insert>
+    
+    <insert id="addSectionProcessRel" parameterType="com.bosch.dstools.bls.datamodel.SectionProcessLink"> 
+        insert into section_process (section_id, process_id,createtime) 
+        values(#{section_id}, #{process_id}, #{createTime})  
+    </insert>
+    <delete id="deleteSectionProcessRel" parameterType="com.bosch.dstools.bls.datamodel.SectionProcessLink">
+    	delete from section_process where section_id=${section_id}
+    </delete>
+    
+       <select id="findCount" resultType="java.lang.Integer" >
+		SELECT count(section_id) FROM section WHERE pdStatus!=#{sectionStatus, jdbcType=INTEGER} and pdType=#{sectionType, jdbcType=INTEGER}
+		<if test="searchCondition != null and searchCondition != '' ">  
+	            and (sectionNo like "%"#{searchCondition}"%" or   
+	           name like "%"#{searchCondition}"%")
+	        </if> 
+	</select>
+	
+    
+    <select id="findAll" resultMap="sectionInfo">
+		select s.section_id,s.sectionNo, s.name,s.createId,s.pdStatus, s.createTime, s.updateTime, s.pdType, s.isActive, s.description,
+		p.process_id as processId, p.processNo as processNo, p.processName as processName, p.processType as processType,
+		p.description as proDescription, p.version as version, p.createId as proCreateId, p.state as proState, p.createTime as proCreateTime,
+		p.updateTime as proUpdateTime, p.content as content,p.filePath as filePath from section s left join section_process sp on s.section_id = sp.section_id
+		left join process p on sp.process_id = p.process_id where s.pdStatus!=#{sectionStatus, jdbcType=INTEGER} and s.pdType=#{sectionType, jdbcType=INTEGER}
+			<choose>
+				<when test="moveDirection==1">
+					and s.section_id > #{curPageLastId}
+				</when>
+				<otherwise>
+					and #{curPageLastId} > s.section_id  
+				</otherwise>
+			</choose>
+			<if test="searchCondition != null and searchCondition != '' ">  
+	            and (s.sectionNo like "%"#{searchCondition}"%" or   
+	           s.name like "%"#{searchCondition}"%")
+	        </if> 
+	 	order by s.section_id asc limit #{perPage}
+	</select>
+	
+	<select id="findFirstPerPage" resultMap="sectionInfo">
+	select s.section_id,s.sectionNo, s.name,s.createId,s.pdStatus, s.createTime, s.updateTime, s.pdType, s.isActive, s.description,
+		p.process_id as processId, p.processNo as processNo, p.processName as processName, p.processType as processType,
+		p.description as proDescription, p.version as version, p.createId as proCreateId, p.state as proState, p.createTime as proCreateTime,
+		p.updateTime as proUpdateTime, p.content as content,p.filePath as filePath from section s left join section_process sp on s.section_id = sp.section_id
+		left join process p on sp.process_id = p.process_id where s.pdStatus!=#{sectionStatus, jdbcType=INTEGER} and s.pdType=#{sectionType, jdbcType=INTEGER}
+				<if test="searchCondition != null and searchCondition != '' ">  
+	            and (s.sectionNo like "%"#{searchCondition}"%" or   
+	           s.name like "%"#{searchCondition}"%")
+	     </if> 
+		order by s.section_id asc limit 0,#{perPage}
+	</select>
+	
+<!-- 	
+	<select id="searchBysectionId" resultMap="sectionInfo" >
+		SELECT section_id, sectionNo, name,createId, pdStatus, createTime, updateTime, pdType, isActive, description
+		FROM project_domain WHERE section_id=#{sectionId}
+	</select> -->
+	
+	<select id="searchBysectionId" resultMap="sectionInfo">
+		select s.section_id,s.sectionNo, s.name,s.createId,s.pdStatus, s.createTime, s.updateTime, s.pdType, s.isActive, s.description,
+		p.process_id as processId, p.processNo as processNo, p.processName as processName, p.processType as processType,
+		p.description as proDescription, p.version as version, p.createId as proCreateId, p.state as proState, p.createTime as proCreateTime,
+		p.updateTime as proUpdateTime, p.content as content,p.filePath as filePath from section s left join section_process sp on s.section_id = sp.section_id
+		left join process p on sp.process_id = p.process_id where s.section_id=#{sectionId} 
+	</select>
+	
+	<select id="searchBySectionNo" resultMap="sectionInfo">
+		select s.section_id,s.sectionNo, s.name,s.createId,s.pdStatus, s.createTime, s.updateTime, s.pdType, s.isActive, s.description
+		 from section s where s.sectionNo=#{sectionNo} and s.pdType=#{sectionType}
+	</select>
+	
+	
+	<resultMap type="com.bosch.dstools.bls.datamodel.SectionInfo" id="sectionInfo">
+		<result property="sectionId" column="section_id" />
+		<result property="sectionNo" column="sectionNo" />
+		<result property="name" column="name" />
+		<result property="createId" column="createId" />
+		<result property="pdStatus" column="pdStatus" />
+		<result property="createTime" column="createTime" />
+		<result property="updateTime" column="updateTime" />
+		<result property="pdType" column="pdType" />
+		<result property="isActive" column="isActive" />
+		<result property="description" column="description" />
+		<collection property="process" ofType="com.bosch.dstools.bls.datamodel.ProcessInfo">
+			<result property="processId" column="processId" />
+			<result property="processNo" column="processNo" />
+			<result property="processName" column="processName" />
+			<result property="processType" column="processType" />
+			<result property="description" column="proDescription" />
+			<result property="createId" column="proCreateId" />
+			<result property="content" column="content" />
+			<result property="filePath" column="filePath" />
+			<result property="version" column="version" />
+			<result property="state" column="proState" />
+			<result property="createTime" column="proCreateTime" />	
+			<result property="updateTime" column="proUpdateTime" />
+		</collection>
+	</resultMap>
+ 
+	 
+	<update id="updateSectionInfo" parameterType="com.bosch.dstools.bls.datamodel.SectionInfo">
+		 UPDATE section 
+		 <trim prefix="set" suffixOverrides=",">
+		 	<if test="name!=null and name!=''">name=#{name},</if>
+		 	<if test="sectionNo!=null and sectionNo!=''">sectionNo=#{sectionNo},</if>
+		 	<if test="createId!=null and createId!=''">createId=#{createId},</if>
+		 	<if test="pdType!=null and pdType!=''">pdType=#{pdType},</if>
+		 	<if test="description!=null and description!=''">description=#{description},</if>
+		 	<if test="pdStatus!=null and pdStatus!=''">pdStatus=#{pdStatus},</if>
+		 	<if test="createTime!=null and createTime!=''">createTime=#{createTime},</if>
+		 	<if test="updateTime!=null and updateTime!=''">updateTime=#{updateTime},</if> 
+		 </trim> 
+		 WHERE section_id=#{sectionId}
+	</update>
+  
+<!-- 	sectionInfo -->
+ 
+	
+</mapper>

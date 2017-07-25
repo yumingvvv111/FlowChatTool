@@ -1,0 +1,1861 @@
+html,
+body
+{
+    font: 14px sans-serif;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+dl{margin:0;}
+*:focus{
+    outline: 0;
+    border:none;
+}
+.pane-content
+{
+    scrollable: false;
+}
+
+.configurationButtons
+{
+    padding: 4px;
+    background: #ffffff;
+    border: 1px solid #dadada;
+    margin: 0 -1px 0 0;
+}
+
+.configurationButtons span
+{
+    width: 16px;
+    height: 16px;
+    background-image: url("../../images/diagram-sprite.png");
+    background-repeat: no-repeat;
+    -webkit-transform: translatez(0);
+    display: block;
+}
+
+#panelBar div
+{
+    background: #f4f4f4;
+}
+
+.alignLeft
+{
+    background-position: -144px 0;
+}
+
+.alignRight
+{
+    background-position: -160px 0;
+}
+
+.alignTop
+{
+    background-position: -112px 0;
+}
+
+.alignBottom
+{
+    background-position: -128px 0;
+}
+
+.alignHor
+{
+    background-position: -224px 0;
+}
+
+.alignVer
+{
+    background-position: -208px 0;
+}
+.toFront
+{
+    background-position: -176px 0;
+}
+
+.toBack
+{
+    background-position: -192px 0;
+}
+
+.k-menu .upload-item
+{
+    overflow: hidden;
+    padding: 0;
+}
+    
+.k-menu .upload-item .k-dropzone
+{
+    padding: 0;
+}
+    
+.k-menu .k-upload
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.k-menu .k-upload-button
+{
+    height: 100px;
+}
+    
+.k-ie7 .k-menu .k-upload
+{
+    filter: alpha(opacity=0);
+}
+    
+.k-menu .upload-item .k-upload-button
+{
+    border-width: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
+.k-menu #export
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: block;
+}
+
+.k-ie7 .k-menu #export
+{
+    filter: alpha(opacity=0);
+}
+
+.k-menu .k-sprite
+{
+    background-image: url("../../images/diagram-sprite.png");
+}
+
+.new-item
+{
+    background-position: 0 0;
+}
+
+.blank-item
+{
+    background-position: 0 0;
+}
+
+.open-item
+{
+    background-position: -32px 0;
+}
+
+.save-item
+{
+    background-position: -16px 0;
+}
+
+.undo-item
+{
+    background-position: -48px 0;
+}
+
+.redo-item
+{
+    background-position: -64px 0;
+}
+
+.copy-item
+{
+    background-position: -80px 0;
+}
+
+.paste-item
+{
+    background-position: -96px 0;
+}
+
+.k-slider
+{
+    vertical-align: middle;
+}
+
+.k-numerictextbox
+{
+    width: 60px;
+}
+
+#splitter
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: auto;
+    top: 92px;
+    bottom: 35px;
+    border-width: 0 0 1px;
+}
+
+#bottom-box
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 3px;
+    text-align: right;
+    background:#fff;
+}
+
+#diagram
+{
+    border: 0;
+    width: 100%;
+}
+
+#diagram,
+#center-pane .pane-content
+{
+    height: 100%;
+}
+
+.k-panelbar .k-content ul
+{
+    margin: 0;
+    padding: 0;
+}
+
+.k-panelbar .k-content li
+{
+    text-align: right;
+    position: relative;
+    list-style: none;
+    padding: 5px 0 0;
+}
+
+.k-panelbar .k-content
+{
+    padding-bottom: 5px;
+}
+.k-panelbar .k-content li > span
+{
+    position: absolute;
+    display: block;
+    left: 10px;
+    top: 10px;
+}
+
+.k-panelbar .k-content li > .k-widget
+{
+    width: 50%;
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: left;
+    position: static;
+}
+
+.k-panelbar .k-content .k-selected-color
+{
+    width: 100%;
+}
+
+.k-panelbar
+{
+    border-width: 0;
+}
+
+.k-panelbar,
+.k-panelbar .k-panel,
+.k-panelbar li.k-item
+{
+    background: transparent;
+}
+
+.k-panelbar .k-panel,
+.k-panelbar .k-content
+{
+    background: #f0f0f0;
+}
+
+#shapesPanelBar .k-panel .k-item
+{
+    display: inline-block;
+    width: 50%;
+}
+
+#shapesPanelBar .k-panel .k-state-hover,
+#shapesPanelBar .k-panel .k-state-selected
+{
+    color: inherit;
+    background: #fff;
+}
+
+.shapeItem
+{
+    margin-top: 10px;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background-image: url("../../images/diagram-toolbox.png");
+    background-size: auto 100%;
+}
+
+#shapesPanelBar span
+{
+    text-align: center;
+    display: block;
+}
+
+#shapesPanelBar .shapeItem
+{
+    display: inline-block;
+}
+
+#menu > .k-menu
+{
+    height: 40px;
+}
+
+#menu .k-item > .k-link
+{
+    padding: .8em 1.4em;
+}
+
+.header
+{
+    color: #fff;
+    background: #666BC2;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 20px;
+    height: 50px;
+    line-height: 50px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.header a
+{
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+    margin-right: 30px;
+    float: right;
+}
+
+.header a:hover
+{
+    text-decoration: underline;
+}
+
+div.about
+{
+    color: #333;
+    padding: 20px 30px;
+}
+
+.about ul
+{
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 90px;
+    margin: 0;
+    width: 130px;
+    color: #25A0DA;
+}
+
+.about a
+{
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.about a:hover
+{
+    text-decoration: underline;
+}
+
+.about h2,
+.about h3
+{
+    color: #000;
+    font-size: 16px;
+}
+
+.about h3
+{
+    margin-top: 25px;
+    padding-top: 25px;
+    display: block;
+    border-top: 1px solid #eee;
+}
+
+.about p
+{
+    margin: 25px 0;
+}
+
+.k-window-titlebar
+{
+    font-weight: bold;
+    background: #A4A8EF;
+    color: #fff;
+    padding: .6em 0;
+    text-indent: .4em;
+}
+
+.k-window-actions
+{
+    text-indent: 0;
+    margin-right: .2em;
+    margin-top: .2em;
+}
+
+#myDiagram {
+	height:700px;
+}
+
+.shape-content-height{
+    height:450px;
+}
+.my-palette{
+    position: relative;
+    width:100%;
+}
+.my-palette canvas{
+    -webkit-user-select: none;
+    cursor: auto;
+}
+.palettel-wraper{
+	height:450px;
+}
+.overview-height{
+	height:148px;
+}
+
+.action-link,.action-grid,.action-move,.action-select,.action-zoom,.action-zoomin, .action-zoomout{
+    width:33px;
+    height:28px;
+    background-image: url('../../images/process-icons.png');
+    background-repeat: no-repeat;
+    background-position: -9px -11px;
+    border: none;
+    background-color: transparent;
+    margin:0;
+    padding:0;
+    float:left;
+}
+
+.action-link.active{
+    background-position: -9px -45px;
+}
+.action-select{
+    background-position: -42px -11px
+}
+.action-select.active{
+    background-position: -42px -45px
+}
+
+.action-move{
+    background-position: -75px -11px;
+    margin-right: 10px;
+    width:35px;
+}
+.action-move.active{
+    background-position: -75px -45px
+}
+.action-zoom{
+    background-position: -117px -11px;
+     width:64px;
+}
+.action-zoom:hover{
+    background-position: -117px -45px
+}
+
+.action-zoomin{
+    background-position: -180px -11px
+}
+.action-zoomin:hover{
+    background-position: -180px -45px
+}
+.action-zoomout{
+    background-position: -212px -11px
+}
+.action-zoomout:hover{
+    background-position: -212px -45px
+}
+.action-grid{
+    background-position: -245px -11px
+}
+.action-grid:hover{
+    background-position: -245px -45px
+}
+.file-buttons{
+    position: absolute;
+}
+.action-buttons{
+    position: absolute;
+    right:316px;
+}
+.zoom-value{
+    position: absolute;
+    left:118px;
+    top:6px;
+    border:none;
+    background: transparent;
+}
+.zoom-value:focus{
+    border:none;
+    outline: 0;
+}
+#right-pane{
+	background:#f0f0f0;
+}
+.shape-description, fk-content{
+	width: 96%;
+	height:50px;
+}
+.elementBtn {
+    width: 80px;
+    height: 23px;
+    margin: 10px;
+}
+.mySavedFiles {
+    width: 60%;
+    height: 30px;
+}
+.propery-item{
+	display:none;
+}
+.loadingWrapper{
+	width:80px;
+	height:80px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	display:none;
+	overflow:hidden;
+}
+.loadingWrapper i, .loadingWrapper span{
+	display:block;
+	width:100%;
+}
+.loadingWrapper i{
+	height:60px;
+	background:url('../../images/loading.gif') no-repeat -88px -72px;
+}
+.loadingWrapper span{
+	height:20px;
+	text-align:center;
+}
+
+.k-i-arrow-s,.k-i-seek-w,.k-i-arrow-w,.k-i-arrow-e,.k-i-seek-e{
+	margin-top:5px;
+}
+.k-pager-numbers li, .k-pager-input{
+	min-width:30px;
+	min-height:30px;
+}
+.k-pager-numbers li span{
+	left:0 !important;
+	top:0 !important;
+}
+@font-face {
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .csslider1 {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+    }
+    .csslider1 > .cs_anchor {
+        display: none;
+    }
+    .csslider1 > ul {
+        position: relative;
+        z-index: 1;
+        font-size: 0;
+        line-height: 0;
+        margin: 0 auto;
+        padding: 0;
+
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .csslider1 > ul > li.img img {
+        width: 100%;
+    }
+    .csslider1 > ul > li.img {
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+    .csslider1 > ul > li {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-size: 15px;
+        font-size: initial;
+        line-height: normal;
+        white-space: normal;
+        vertical-align: top;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+    }
+    .csslider1 .cs_lnk{
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+        font-size: 0pt;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    .csslider1 > .cs_arrowprev,
+    .csslider1 > .cs_arrownext {
+        position: absolute;
+        top: 50%;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        z-index: 5;
+    }
+    .csslider1 > .cs_arrowprev > label,
+    .csslider1 > .cs_arrownext > label {
+        position: absolute;
+
+        text-decoration: none;
+        cursor: pointer;
+        opacity: 0;
+        z-index: -1;
+    }
+    .csslider1 > .cs_arrowprev {
+        left: 0;
+    }
+    .csslider1 > .cs_arrownext {
+        right: 0;
+    }
+
+    .csslider1 > .cs_arrowprev > label.num2,
+    .csslider1 > .cs_arrownext > label.num1 {
+        opacity: 1;
+        z-index: 5;
+    }
+    .csslider1 > .slide:checked ~ .cs_arrowprev > label,
+    .csslider1 > .slide:checked ~ .cs_arrownext > label {
+        opacity: 0;
+        z-index: -1;
+    }
+
+
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_arrowprev > label.num2,
+    .csslider1 > #cs_slide1_0:checked ~ .cs_arrownext > label.num1,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_arrowprev > label.num0,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_arrownext > label.num2,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_arrowprev > label.num1,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_arrownext > label.num0 {
+        opacity: 1;
+        z-index: 5;
+    }
+
+    /* calculate autoplay */
+    @-webkit-keyframes arrow {
+        0%, 33.32333333333334% { opacity: 1; z-index: 5; }
+        33.333333333333336%, 100%	{ opacity: 0; z-index: -1; }
+    }
+    @-moz-keyframes arrow {
+        0%, 33.32333333333334% { opacity: 1; z-index: 5; }
+        33.333333333333336%, 100%	{ opacity: 0; z-index: -1; }
+    }
+    @-ms-keyframes arrow {
+        0%, 33.32333333333334% { opacity: 1; z-index: 5; }
+        33.333333333333336%, 100%	{ opacity: 0; z-index: -1; }
+    }
+    @-o-keyframes arrow {
+        0%, 33.32333333333334% { opacity: 1; z-index: 5; }
+        33.333333333333336%, 100%	{ opacity: 0; z-index: -1; }
+    }
+    @keyframes arrow {
+        0%, 33.32333333333334% { opacity: 1; z-index: 5; }
+        33.333333333333336%, 100%	{ opacity: 0; z-index: -1; }
+    }
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_arrowprev > label.num2,
+    .csslider1 > #cs_play1:checked ~ .cs_arrownext > label.num1,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrowprev > label.num2,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrownext > label.num1 {
+        -webkit-animation: arrow 12000ms infinite -2000ms;
+        -moz-animation: arrow 12000ms infinite -2000ms;
+        -ms-animation: arrow 12000ms infinite -2000ms;
+        -o-animation: arrow 12000ms infinite -2000ms;
+        animation: arrow 12000ms infinite -2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_arrowprev > label.num0,
+    .csslider1 > #cs_play1:checked ~ .cs_arrownext > label.num2,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrowprev > label.num0,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrownext > label.num2 {
+        -webkit-animation: arrow 12000ms infinite 2000ms;
+        -moz-animation: arrow 12000ms infinite 2000ms;
+        -ms-animation: arrow 12000ms infinite 2000ms;
+        -o-animation: arrow 12000ms infinite 2000ms;
+        animation: arrow 12000ms infinite 2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_arrowprev > label.num1,
+    .csslider1 > #cs_play1:checked ~ .cs_arrownext > label.num0,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrowprev > label.num1,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrownext > label.num0 {
+        -webkit-animation: arrow 12000ms infinite 6000ms;
+        -moz-animation: arrow 12000ms infinite 6000ms;
+        -ms-animation: arrow 12000ms infinite 6000ms;
+        -o-animation: arrow 12000ms infinite 6000ms;
+        animation: arrow 12000ms infinite 6000ms;
+
+    }
+
+
+    .csslider1.cs_pauseHover:hover > .cs_arrowprev > label,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrowprev > label,
+    .csslider1.cs_pauseHover:hover > .cs_arrownext > label,
+    .csslider1 > #cs_pause1:checked ~ .cs_arrownext > label {
+        -webkit-animation-play-state: paused !important;
+        -moz-animation-play-state: paused !important;
+        -ms-animation-play-state: paused !important;
+        -o-animation-play-state: paused !important;
+        animation-play-state: paused !important;
+    }
+
+    /* stop */
+    .csslider1 > .slide:checked ~ .cs_arrowprev > label,
+    .csslider1 > .slide:checked ~ .cs_arrownext > label {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        -o-animation: none;
+        animation: none;
+    }
+
+
+    /* /calculate autoplay */
+    .csslider1 > .cs_bullets {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        z-index: 6;
+        font-size: 0;
+        line-height: 8pt;
+        text-align: center;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .csslider1 > .cs_bullets > div {
+        margin-left: -50%;
+        width: 100%;
+    }
+    .csslider1 > .cs_bullets > label {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .csslider1 > .cs_bullets > label > .cs_thumb {
+        visibility: hidden;
+        position: absolute;
+        opacity: 0;
+        z-index: 1;
+        line-height: 0;
+        left: -39.5px;
+        top: -48px;
+    }.csslider1 > .cs_description {
+         z-index: 3;
+     }
+    .csslider1 > .cs_description a,
+    .csslider1 > .cs_description a:visited,
+    .csslider1 > .cs_description a:active {
+        color: inherit;
+    }
+    .csslider1 > .cs_description a:hover {
+        text-decoration: none;
+    }
+    .csslider1 > .cs_description > label {
+        position: absolute;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: left;
+        max-width: 50%;
+        left: 0;
+    }
+    .csslider1 > .cs_description > label > span {
+        vertical-align: top;
+    }
+    .csslider1 > .cs_description > label span {
+        display: inline-block;
+    }
+    .csslider1 > #cs_slide1_0:checked ~ ul > li.num0,
+    .csslider1 > #cs_slide1_1:checked ~ ul > li.num1,
+    .csslider1 > #cs_slide1_2:checked ~ ul > li.num2 {
+        opacity: 1;
+        z-index: 2;
+    }
+
+    .csslider1 > ul > li {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-block;
+        opacity: 0;
+        z-index: 1;
+
+        -webkit-transition: opacity 2000ms ease;
+        -moz-transition: opacity 2000ms ease;
+        -ms-transition: opacity 2000ms ease;
+        -o-transition: opacity 2000ms ease;
+        transition: opacity 2000ms ease;
+
+    }
+    .csslider1 > ul > li.num0 {
+        opacity: 1;
+        z-index: 2;
+    }
+    .csslider1 > .slide:checked ~ ul > li.num0 {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    /* calculate autoplay */
+    @-webkit-keyframes fade {
+        0%, 50%, 100%	{ opacity: 0; z-index: 2; }
+        16.666666666666668%, 33.333333333333336%	{ opacity: 1; z-index: 2; }
+    }
+    @-moz-keyframes fade {
+        0%, 50%, 100%	{ opacity: 0; z-index: 2; }
+        16.666666666666668%, 33.333333333333336%	{ opacity: 1; z-index: 2; }
+    }
+    @-ms-keyframes fade {
+        0%, 50%, 100%	{ opacity: 0; z-index: 2; }
+        16.666666666666668%, 33.333333333333336%	{ opacity: 1; z-index: 2; }
+    }
+    @-o-keyframes fade {
+        0%, 50%, 100%	{ opacity: 0; z-index: 2; }
+        16.666666666666668%, 33.333333333333336%	{ opacity: 1; z-index: 2; }
+    }
+    @keyframes fade {
+        0%, 50%, 100%	{ opacity: 0; z-index: 2; }
+        16.666666666666668%, 33.333333333333336%	{ opacity: 1; z-index: 2; }
+    }
+
+
+    .csslider1 > #cs_play1:checked ~ ul > li.num0,
+    .csslider1 > #cs_pause1:checked ~ ul > li.num0 {
+        -webkit-animation: fade 12000ms infinite -2000ms;
+        -moz-animation: fade 12000ms infinite -2000ms;
+        -ms-animation: fade 12000ms infinite -2000ms;
+        -o-animation: fade 12000ms infinite -2000ms;
+        animation: fade 12000ms infinite -2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ ul > li.num1,
+    .csslider1 > #cs_pause1:checked ~ ul > li.num1 {
+        -webkit-animation: fade 12000ms infinite 2000ms;
+        -moz-animation: fade 12000ms infinite 2000ms;
+        -ms-animation: fade 12000ms infinite 2000ms;
+        -o-animation: fade 12000ms infinite 2000ms;
+        animation: fade 12000ms infinite 2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ ul > li.num2,
+    .csslider1 > #cs_pause1:checked ~ ul > li.num2 {
+        -webkit-animation: fade 12000ms infinite 6000ms;
+        -moz-animation: fade 12000ms infinite 6000ms;
+        -ms-animation: fade 12000ms infinite 6000ms;
+        -o-animation: fade 12000ms infinite 6000ms;
+        animation: fade 12000ms infinite 6000ms;
+
+    }
+
+
+
+
+    .csslider1 > #cs_play1:checked ~ ul > li,
+    .csslider1 > #cs_pause1:checked ~ ul > li {
+        -webkit-transition: none;
+        -moz-transition: none;
+        -ms-transition: none;
+        -o-transition: none;
+        transition: none;
+
+    }
+
+    .csslider1.cs_pauseHover:hover > ul > li,
+    .csslider1 > #cs_pause1:checked ~ ul > li{
+        -webkit-animation-play-state: paused !important;
+        -moz-animation-play-state: paused !important;
+        -ms-animation-play-state: paused !important;
+        -o-animation-play-state: paused !important;
+        animation-play-state: paused !important;
+    }
+    /* stop */
+
+    .csslider1 > .slide:checked ~ ul > li {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        -o-animation: none;
+        animation: none;
+    }
+
+    /* /calculate autoplay */
+    .csslider1 {
+        -webkit-perspective: 500px;
+        -moz-perspective: 500px;
+        -ms-perspective: 500px;
+        -o-perspective: 500px;
+        perspective: 500px;
+
+    }
+    .csslider1 > .cs_play_pause {
+        -webkit-transition: .5s opacity 0s ease;
+        -moz-transition: .5s opacity 0s ease;
+        -ms-transition: .5s opacity 0s ease;
+        -o-transition: .5s opacity 0s ease;
+        transition: .5s opacity 0s ease;
+
+    }
+    .csslider1 > .cs_arrowprev {
+        -webkit-transition: .5s opacity .15s ease, .5s -webkit-transform .15s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: .5s opacity .15s ease, .5s -moz-transform .15s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: .5s opacity .15s ease, .5s -ms-transform .15s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: .5s opacity .15s ease, .5s -o-transform .15s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: .5s opacity .15s ease, .5s transform .15s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+        -webkit-transform: rotateY(-90deg);
+        -moz-transform: rotateY(-90deg);
+        -ms-transform: rotateY(-90deg);
+        -o-transform: rotateY(-90deg);
+        transform: rotateY(-90deg);
+
+    }
+    .csslider1 > .cs_arrownext {
+        -webkit-transition: .5s opacity .3s ease, .5s -webkit-transform .3s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: .5s opacity .3s ease, .5s -moz-transform .3s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: .5s opacity .3s ease, .5s -ms-transform .3s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: .5s opacity .3s ease, .5s -o-transform .3s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: .5s opacity .3s ease, .5s transform .3s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+        -webkit-transform: rotateY(90deg);
+        -moz-transform: rotateY(90deg);
+        -ms-transform: rotateY(90deg);
+        -o-transform: rotateY(90deg);
+        transform: rotateY(90deg);
+
+    }
+    .csslider1 > .cs_arrowprev,
+    .csslider1 > .cs_arrownext,
+    .csslider1 > .cs_play_pause {
+        opacity: 0;
+    }
+    .csslider1:hover > .cs_arrowprev,
+    .csslider1:hover > .cs_arrownext,
+    .csslider1:hover > .cs_play_pause {
+        opacity: 1;
+        -webkit-transform: rotateX(0deg);
+        -moz-transform: rotateX(0deg);
+        -ms-transform: rotateX(0deg);
+        -o-transform: rotateX(0deg);
+        transform: rotateX(0deg);
+
+    }.csslider1 > .cs_arrowprev > label,
+     .csslider1 > .cs_arrownext > label {
+         overflow: hidden;
+         margin-top: -35px;
+         width: 40px;
+         height: 70px;
+
+         /* Fallback for web browsers that doesn't support RGBa */
+         background: #000;
+         background-color: rgba(0,0,0,0.6);
+
+         -webkit-border-radius: 4px;
+         -moz-border-radius: 4px;
+         border-radius: 4px;
+     }
+    .csslider1 > .cs_arrowprev {
+        left: 70px;
+    }
+    .csslider1 > .cs_arrownext {
+        right: 70px;
+    }
+    .csslider1 > .cs_arrowprev > label {
+        right: 0;
+    }
+    .csslider1 > .cs_arrownext > label {
+        left: 0;
+    }
+    .csslider1 > .cs_arrowprev > label:after {
+        content: '<';
+    }
+    .csslider1 > .cs_arrownext > label:after {
+        content: '>';
+    }
+    .csslider1 > .cs_arrowprev > label:after,
+    .csslider1 > .cs_arrownext > label:after {
+        display: block;
+        font: 40px "demurecontrols";
+        text-align: center;
+        line-height: 76px;
+        color: #fff;
+    }
+
+
+
+
+    .csslider1 > .cs_arrowprev > label,
+    .csslider1 > .cs_arrownext > label {
+        -webkit-transition: 300ms width ease, 300ms margin-left ease, 300ms background-color ease;
+        -moz-transition: 300ms width ease, 300ms margin-left ease, 300ms background-color ease;
+        -ms-transition: 300ms width ease, 300ms margin-left ease, 300ms background-color ease;
+        -o-transition: 300ms width ease, 300ms margin-left ease, 300ms background-color ease;
+        transition: 300ms width ease, 300ms margin-left ease, 300ms background-color ease;
+
+    }
+    .csslider1 > .cs_arrowprev:hover > label {
+        background-color: #1FA5AD;
+        width: 70px;
+    }
+    .csslider1 > .cs_arrownext:hover > label {
+        background-color: #1FA5AD;
+        width: 70px;
+    }.csslider1 > .cs_bullets {
+         bottom: 30px;
+         margin-bottom: 5px;
+     }
+
+    .csslider1 > .cs_bullets > label {
+        -webkit-perspective: 500px;
+        -moz-perspective: 500px;
+        -ms-perspective: 500px;
+        -o-perspective: 500px;
+        perspective: 500px;
+
+    }
+
+    .csslider1 > .cs_bullets > label > .cs_thumb {
+        border: 3px solid #1FA5AD;
+        margin-top: -11px;
+        -webkit-transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), -webkit-transform 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), visibility 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        -moz-transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), -moz-transform 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), visibility 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        -ms-transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), -ms-transform 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), visibility 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        -o-transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), -o-transform 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), visibility 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), transform 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275), visibility 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+
+        -webkit-transform-origin: 0% 100% 0px;
+        -moz-transform-origin: 0% 100% 0px;
+        -ms-transform-origin: 0% 100% 0px;
+        -o-transform-origin: 0% 100% 0px;
+        transform-origin: 0% 100% 0px;
+
+        -webkit-transform: rotateX(90deg);
+        -moz-transform: rotateX(90deg);
+        -ms-transform: rotateX(90deg);
+        -o-transform: rotateX(90deg);
+        transform: rotateX(90deg);
+
+    }
+    .csslider1 > .cs_bullets > label > .cs_thumb:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 50%;
+        margin-left: -1px;
+        bottom: -8px;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+
+        border-top: 7px solid #1FA5AD;
+    }
+    .csslider1 > .cs_bullets > label:hover > .cs_thumb {
+        visibility: visible;
+        opacity: 1;
+        -webkit-transform: rotateX(0deg);
+        -moz-transform: rotateX(0deg);
+        -ms-transform: rotateX(0deg);
+        -o-transform: rotateX(0deg);
+        transform: rotateX(0deg);
+
+    }
+
+
+    .csslider1 > .cs_bullets > label {
+        margin: 0 6px;
+        padding: 9px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+
+        /* Fallback for web browsers that doesn't support RGBa */
+        background: #000;
+        background-color: rgba(0,0,0,0.6);
+    }
+
+    .csslider1 > .cs_bullets > label.num0 {
+        background-color: #1FA5AD;
+    }
+    .csslider1 > .slide:checked ~ .cs_bullets > label {
+        /* Fallback for web browsers that doesn't support RGBa */
+        background: #000;
+        background-color: rgba(0,0,0,0.6);
+    }
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_bullets > label.num0,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_bullets > label.num1,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_bullets > label.num2 {
+        background-color: #1FA5AD;
+    }
+
+    .csslider1 > .cs_bullets > label:hover {
+        background-color: #1FA5AD;
+    }
+
+    /* calculate autoplay */
+    @-webkit-keyframes bullet {
+        0%, 33.32333333333334%	{ background-color: #1FA5AD; }
+        33.333333333333336%, 100% { background: #000; background-color: rgba(0,0,0,0.6); }
+    }
+    @-moz-keyframes bullet {
+        0%, 33.32333333333334%	{ background-color: #1FA5AD; }
+        33.333333333333336%, 100% { background: #000; background-color: rgba(0,0,0,0.6); }
+    }
+    @-ms-keyframes bullet {
+        0%, 33.32333333333334%	{ background-color: #1FA5AD; }
+        33.333333333333336%, 100% { background: #000; background-color: rgba(0,0,0,0.6); }
+    }
+    @-o-keyframes bullet {
+        0%, 33.32333333333334%	{ background-color: #1FA5AD; }
+        33.333333333333336%, 100% { background: #000; background-color: rgba(0,0,0,0.6); }
+    }
+    @keyframes bullet {
+        0%, 33.32333333333334%	{ background-color: #1FA5AD; }
+        33.333333333333336%, 100% { background: #000; background-color: rgba(0,0,0,0.6); }
+    }
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_bullets > label.num0,
+    .csslider1 > #cs_pause1:checked ~ .cs_bullets > label.num0 {
+        -webkit-animation: bullet 12000ms infinite -2000ms;
+        -moz-animation: bullet 12000ms infinite -2000ms;
+        -ms-animation: bullet 12000ms infinite -2000ms;
+        -o-animation: bullet 12000ms infinite -2000ms;
+        animation: bullet 12000ms infinite -2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_bullets > label.num1,
+    .csslider1 > #cs_pause1:checked ~ .cs_bullets > label.num1 {
+        -webkit-animation: bullet 12000ms infinite 2000ms;
+        -moz-animation: bullet 12000ms infinite 2000ms;
+        -ms-animation: bullet 12000ms infinite 2000ms;
+        -o-animation: bullet 12000ms infinite 2000ms;
+        animation: bullet 12000ms infinite 2000ms;
+
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_bullets > label.num2,
+    .csslider1 > #cs_pause1:checked ~ .cs_bullets > label.num2 {
+        -webkit-animation: bullet 12000ms infinite 6000ms;
+        -moz-animation: bullet 12000ms infinite 6000ms;
+        -ms-animation: bullet 12000ms infinite 6000ms;
+        -o-animation: bullet 12000ms infinite 6000ms;
+        animation: bullet 12000ms infinite 6000ms;
+
+    }
+
+
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_bullets > label,
+    .csslider1 > #cs_pause1:checked ~ .cs_bullets > label {
+        -webkit-transition: none;
+        -moz-transition: none;
+        -ms-transition: none;
+        -o-transition: none;
+        transition: none;
+
+    }
+
+    .csslider1.cs_pauseHover:hover > .cs_bullets > label,
+    .csslider1 > #cs_pause1:checked ~ .cs_bullets > label {
+        -webkit-animation-play-state: paused !important;
+        -moz-animation-play-state: paused !important;
+        -ms-animation-play-state: paused !important;
+        -o-animation-play-state: paused !important;
+        animation-play-state: paused !important;
+    }
+
+    /* stop */
+
+    .csslider1 > .slide:checked ~ .cs_bullets > label {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        -o-animation: none;
+        animation: none;
+    }
+
+    /* /calculate autoplay */
+
+
+    .csslider1 > .cs_description > label {
+        font: 20px 'Roboto', sans-serif;
+        line-height: normal;
+        bottom: 35px;
+        left: 20px;
+        top: auto;
+        opacity: 1;
+        z-index: 1;
+
+        -webkit-perspective: 500px;
+        -moz-perspective: 500px;
+        -ms-perspective: 500px;
+        -o-perspective: 500px;
+        perspective: 500px;
+
+    }
+    .csslider1 > .cs_description > label > span {
+        margin: 1px 10px;
+        padding: 10px;
+        color: #fff;
+
+        overflow: hidden;
+
+        -webkit-transform-origin: 0% 0% 0px;
+        -moz-transform-origin: 0% 0% 0px;
+        -ms-transform-origin: 0% 0% 0px;
+        -o-transform-origin: 0% 0% 0px;
+        transform-origin: 0% 0% 0px;
+
+
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_description > .num0,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_description > .num1,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_description > .num2 {
+        z-index: 2;
+    }
+
+
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_description > .num0 > .cs_descr,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_description > .num1 > .cs_descr,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_description > .num2 > .cs_descr {
+        opacity: 1;
+        visibility: visible;
+        -webkit-transition: 750ms opacity 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: 750ms opacity 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: 750ms opacity 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: 750ms opacity 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: 750ms opacity 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1350ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+        -webkit-transform: rotateX(0deg);
+        -moz-transform: rotateX(0deg);
+        -ms-transform: rotateX(0deg);
+        -o-transform: rotateX(0deg);
+        transform: rotateX(0deg);
+
+    }
+
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_description > .num0 > .cs_title,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_description > .num1 > .cs_title,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_description > .num2 > .cs_title {
+        opacity: 1;
+        visibility: visible;
+        -webkit-transition: 750ms opacity 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1200ms ease;
+        -moz-transition: 750ms opacity 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1200ms ease;
+        -ms-transition: 750ms opacity 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1200ms ease;
+        -o-transition: 750ms opacity 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1200ms ease;
+        transition: 750ms opacity 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 1200ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 1200ms ease;
+
+        -webkit-transform: rotateX(0deg);
+        -moz-transform: rotateX(0deg);
+        -ms-transform: rotateX(0deg);
+        -o-transform: rotateX(0deg);
+        transform: rotateX(0deg);
+
+    }
+
+
+    .csslider1 > #cs_slide1_0:checked ~ .cs_description > .num0 .cs_wrapper,
+    .csslider1 > #cs_slide1_1:checked ~ .cs_description > .num1 .cs_wrapper,
+    .csslider1 > #cs_slide1_2:checked ~ .cs_description > .num2 .cs_wrapper {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        -moz-transform: translateX(0);
+        -ms-transform: translateX(0);
+        -o-transform: translateX(0);
+        transform: translateX(0);
+
+    }
+
+    .csslider1 > .cs_description > label > .cs_title {
+        margin: 0px 10px;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 2;
+        /* Fallback for web browsers that doesn't support RGBa */
+        background: #000;
+        background-color: rgba(0,0,0,0.6);
+        -webkit-transform: rotateX(90deg);
+        -moz-transform: rotateX(90deg);
+        -ms-transform: rotateX(90deg);
+        -o-transform: rotateX(90deg);
+        transform: rotateX(90deg);
+
+        -webkit-transition: 750ms opacity 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 975ms ease;
+        -moz-transition: 750ms opacity 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 975ms ease;
+        -ms-transition: 750ms opacity 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 975ms ease;
+        -o-transition: 750ms opacity 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 975ms ease;
+        transition: 750ms opacity 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 975ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 975ms ease;
+
+    }
+    .csslider1 > .cs_description > label > .cs_descr {
+        font-size: 0.8em;
+        margin: 1px 10px;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1;
+
+        background-color: #1FA5AD;
+
+        -webkit-transform: rotateX(-90deg);
+        -moz-transform: rotateX(-90deg);
+        -ms-transform: rotateX(-90deg);
+        -o-transform: rotateX(-90deg);
+        transform: rotateX(-90deg);
+
+        -webkit-transition: 750ms opacity 750ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: 750ms opacity 750ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: 750ms opacity 750ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: 750ms opacity 750ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: 750ms opacity 750ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms visibility 600ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+    }
+
+
+    .csslider1 > .cs_description > label > .cs_title > .cs_wrapper {
+        -webkit-transform: translateX(-100%);
+        -moz-transform: translateX(-100%);
+        -ms-transform: translateX(-100%);
+        -o-transform: translateX(-100%);
+        transform: translateX(-100%);
+
+        -webkit-transition: 750ms opacity 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: 750ms opacity 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: 750ms opacity 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: 750ms opacity 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: 750ms opacity 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 1450ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+    }
+    .csslider1 > .cs_description > label > .cs_descr > .cs_wrapper {
+        -webkit-transform: translateX(100%);
+        -moz-transform: translateX(100%);
+        -ms-transform: translateX(100%);
+        -o-transform: translateX(100%);
+        transform: translateX(100%);
+
+        -webkit-transition: 750ms opacity 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -webkit-transform 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -moz-transition: 750ms opacity 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -moz-transform 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -ms-transition: 750ms opacity 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -ms-transform 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        -o-transition: 750ms opacity 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms -o-transform 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+        transition: 750ms opacity 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550), 750ms transform 1675ms cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+    }
+
+
+    /* calculate autoplay */
+    @-webkit-keyframes cs_descrWrapper {
+        3.0625%, 37.708333333333336%	{ z-index: 2; }
+        37.718333333333334%, 100%	{ z-index: 0; }
+    }
+    @-moz-keyframes cs_descrWrapper {
+        3.0625%, 37.708333333333336%	{ z-index: 2; }
+        37.718333333333334%, 100%	{ z-index: 0; }
+    }
+    @-ms-keyframes cs_descrWrapper {
+        3.0625%, 37.708333333333336%	{ z-index: 2; }
+        37.718333333333334%, 100%	{ z-index: 0; }
+    }
+    @-o-keyframes cs_descrWrapper {
+        3.0625%, 37.708333333333336%	{ z-index: 2; }
+        37.718333333333334%, 100%	{ z-index: 0; }
+    }
+    @keyframes cs_descrWrapper {
+        3.0625%, 37.708333333333336%	{ z-index: 2; }
+        37.718333333333334%, 100%	{ z-index: 0; }
+    }
+
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num0 {
+        -webkit-animation: cs_descrWrapper 12000ms infinite -1400ms ease;
+        -moz-animation: cs_descrWrapper 12000ms infinite -1400ms ease;
+        -ms-animation: cs_descrWrapper 12000ms infinite -1400ms ease;
+        -o-animation: cs_descrWrapper 12000ms infinite -1400ms ease;
+        animation: cs_descrWrapper 12000ms infinite -1400ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num1 {
+        -webkit-animation: cs_descrWrapper 12000ms infinite 2600ms ease;
+        -moz-animation: cs_descrWrapper 12000ms infinite 2600ms ease;
+        -ms-animation: cs_descrWrapper 12000ms infinite 2600ms ease;
+        -o-animation: cs_descrWrapper 12000ms infinite 2600ms ease;
+        animation: cs_descrWrapper 12000ms infinite 2600ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num2 {
+        -webkit-animation: cs_descrWrapper 12000ms infinite 6600ms ease;
+        -moz-animation: cs_descrWrapper 12000ms infinite 6600ms ease;
+        -ms-animation: cs_descrWrapper 12000ms infinite 6600ms ease;
+        -o-animation: cs_descrWrapper 12000ms infinite 6600ms ease;
+        animation: cs_descrWrapper 12000ms infinite 6600ms ease;
+    }
+
+
+
+    @-webkit-keyframes cs_title {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -webkit-transform: rotateX(-9deg); z-index: 2; visibility: visible;}
+        4.375%, 28.948333333333334%	{ opacity: 1; -webkit-transform: rotateX(0deg); z-index: 2; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -webkit-transform: rotateX(90deg); z-index: 2; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-moz-keyframes cs_title {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -moz-transform: rotateX(-9deg); z-index: 2; visibility: visible;}
+        4.375%, 28.948333333333334%	{ opacity: 1; -moz-transform: rotateX(0deg); z-index: 2; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -moz-transform: rotateX(90deg); z-index: 2; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-ms-keyframes cs_title {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -ms-transform: rotateX(-9deg); z-index: 2; visibility: visible;}
+        4.375%, 28.948333333333334%	{ opacity: 1; -ms-transform: rotateX(0deg); z-index: 2; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -ms-transform: rotateX(90deg); z-index: 2; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-o-keyframes cs_title {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -o-transform: rotateX(-9deg); z-index: 2; visibility: visible;}
+        4.375%, 28.948333333333334%	{ opacity: 1; -o-transform: rotateX(0deg); z-index: 2; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -o-transform: rotateX(90deg); z-index: 2; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @keyframes cs_title {
+        3.0625%, 30.260833333333334%	{ opacity: 1; transform: rotateX(-9deg); z-index: 2; visibility: visible;}
+        4.375%, 28.948333333333334%	{ opacity: 1; transform: rotateX(0deg); z-index: 2; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; transform: rotateX(90deg); z-index: 2; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+
+
+
+    @-webkit-keyframes cs_descr {
+        6.125%, 25.885833333333334%	{ opacity: 1; -webkit-transform: rotateX(9deg); z-index: 1; visibility: visible;}
+        8.75%, 24.573333333333334%	{ opacity: 1; -webkit-transform: rotateX(0deg); z-index: 1; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -webkit-transform: rotateX(-90deg); z-index: 1; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-moz-keyframes cs_descr {
+        6.125%, 25.885833333333334%	{ opacity: 1; -moz-transform: rotateX(9deg); z-index: 1; visibility: visible;}
+        8.75%, 24.573333333333334%	{ opacity: 1; -moz-transform: rotateX(0deg); z-index: 1; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -moz-transform: rotateX(-90deg); z-index: 1; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-ms-keyframes cs_descr {
+        6.125%, 25.885833333333334%	{ opacity: 1; -ms-transform: rotateX(9deg); z-index: 1; visibility: visible;}
+        8.75%, 24.573333333333334%	{ opacity: 1; -ms-transform: rotateX(0deg); z-index: 1; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -ms-transform: rotateX(-90deg); z-index: 1; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @-o-keyframes cs_descr {
+        6.125%, 25.885833333333334%	{ opacity: 1; -o-transform: rotateX(9deg); z-index: 1; visibility: visible;}
+        8.75%, 24.573333333333334%	{ opacity: 1; -o-transform: rotateX(0deg); z-index: 1; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; -o-transform: rotateX(-90deg); z-index: 1; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+    @keyframes cs_descr {
+        6.125%, 25.885833333333334%	{ opacity: 1; transform: rotateX(9deg); z-index: 1; visibility: visible;}
+        8.75%, 24.573333333333334%	{ opacity: 1; transform: rotateX(0deg); z-index: 1; visibility: visible;}
+        33.333333333333336%	{ opacity: 0; transform: rotateX(-90deg); z-index: 1; visibility: hidden;}
+        33.343333333333334%, 100%	{ z-index: 0; }
+    }
+
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num0  > .cs_title,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num0  > .cs_title {
+        -webkit-animation: cs_title 12000ms infinite -1400ms ease;
+        -moz-animation: cs_title 12000ms infinite -1400ms ease;
+        -ms-animation: cs_title 12000ms infinite -1400ms ease;
+        -o-animation: cs_title 12000ms infinite -1400ms ease;
+        animation: cs_title 12000ms infinite -1400ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num1  > .cs_title,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num1  > .cs_title {
+        -webkit-animation: cs_title 12000ms infinite 2600ms ease;
+        -moz-animation: cs_title 12000ms infinite 2600ms ease;
+        -ms-animation: cs_title 12000ms infinite 2600ms ease;
+        -o-animation: cs_title 12000ms infinite 2600ms ease;
+        animation: cs_title 12000ms infinite 2600ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num2  > .cs_title,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num2  > .cs_title {
+        -webkit-animation: cs_title 12000ms infinite 6600ms ease;
+        -moz-animation: cs_title 12000ms infinite 6600ms ease;
+        -ms-animation: cs_title 12000ms infinite 6600ms ease;
+        -o-animation: cs_title 12000ms infinite 6600ms ease;
+        animation: cs_title 12000ms infinite 6600ms ease;
+    }
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num0  > .cs_descr,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num0  > .cs_descr {
+        -webkit-animation: cs_descr 12000ms infinite -1400ms ease;
+        -moz-animation: cs_descr 12000ms infinite -1400ms ease;
+        -ms-animation: cs_descr 12000ms infinite -1400ms ease;
+        -o-animation: cs_descr 12000ms infinite -1400ms ease;
+        animation: cs_descr 12000ms infinite -1400ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num1  > .cs_descr,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num1  > .cs_descr {
+        -webkit-animation: cs_descr 12000ms infinite 2600ms ease;
+        -moz-animation: cs_descr 12000ms infinite 2600ms ease;
+        -ms-animation: cs_descr 12000ms infinite 2600ms ease;
+        -o-animation: cs_descr 12000ms infinite 2600ms ease;
+        animation: cs_descr 12000ms infinite 2600ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num2  > .cs_descr,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num2  > .cs_descr {
+        -webkit-animation: cs_descr 12000ms infinite 6600ms ease;
+        -moz-animation: cs_descr 12000ms infinite 6600ms ease;
+        -ms-animation: cs_descr 12000ms infinite 6600ms ease;
+        -o-animation: cs_descr 12000ms infinite 6600ms ease;
+        animation: cs_descr 12000ms infinite 6600ms ease;
+    }
+
+
+
+    @-webkit-keyframes cs_title_text {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -webkit-transform: translateX(-1%); }
+        4.375%, 28.948333333333334%	{ opacity: 1; -webkit-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -webkit-transform: translateX(100%); }
+    }
+    @-moz-keyframes cs_title_text {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -moz-transform: translateX(-1%); }
+        4.375%, 28.948333333333334%	{ opacity: 1; -moz-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -moz-transform: translateX(100%); }
+    }
+    @-ms-keyframes cs_title_text {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -ms-transform: translateX(-1%); }
+        4.375%, 28.948333333333334%	{ opacity: 1; -ms-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -ms-transform: translateX(100%); }
+    }
+    @-o-keyframes cs_title_text {
+        3.0625%, 30.260833333333334%	{ opacity: 1; -o-transform: translateX(-1%); }
+        4.375%, 28.948333333333334%	{ opacity: 1; -o-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -o-transform: translateX(100%); }
+    }
+    @keyframes cs_title_text {
+        3.0625%, 30.260833333333334%	{ opacity: 1; transform: translateX(-1%); }
+        4.375%, 28.948333333333334%	{ opacity: 1; transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; transform: translateX(100%); }
+    }
+
+
+    @-webkit-keyframes cs_descr_text {
+        6.125%, 25.885833333333334%	{ opacity: 1; -webkit-transform: translateX(1%); }
+        8.75%, 24.573333333333334%	{ opacity: 1; -webkit-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -webkit-transform: translateX(-100%); }
+    }
+    @-moz-keyframes cs_descr_text {
+        6.125%, 25.885833333333334%	{ opacity: 1; -moz-transform: translateX(1%); }
+        8.75%, 24.573333333333334%	{ opacity: 1; -moz-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -moz-transform: translateX(-100%); }
+    }
+    @-ms-keyframes cs_descr_text {
+        6.125%, 25.885833333333334%	{ opacity: 1; -ms-transform: translateX(1%); }
+        8.75%, 24.573333333333334%	{ opacity: 1; -ms-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -ms-transform: translateX(-100%); }
+    }
+    @-o-keyframes cs_descr_text {
+        6.125%, 25.885833333333334%	{ opacity: 1; -o-transform: translateX(1%); }
+        8.75%, 24.573333333333334%	{ opacity: 1; -o-transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; -o-transform: translateX(-100%); }
+    }
+    @keyframes cs_descr_text {
+        6.125%, 25.885833333333334%	{ opacity: 1; transform: translateX(1%); }
+        8.75%, 24.573333333333334%	{ opacity: 1; transform: translateX(0%); }
+        33.333333333333336%	{ opacity: 0; transform: translateX(-100%); }
+    }
+
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num0 .cs_title > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num0 .cs_title > .cs_wrapper {
+        -webkit-animation: cs_title_text 12000ms infinite -1190ms ease;
+        -moz-animation: cs_title_text 12000ms infinite -1190ms ease;
+        -ms-animation: cs_title_text 12000ms infinite -1190ms ease;
+        -o-animation: cs_title_text 12000ms infinite -1190ms ease;
+        animation: cs_title_text 12000ms infinite -1190ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num1 .cs_title > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num1 .cs_title > .cs_wrapper {
+        -webkit-animation: cs_title_text 12000ms infinite 2810ms ease;
+        -moz-animation: cs_title_text 12000ms infinite 2810ms ease;
+        -ms-animation: cs_title_text 12000ms infinite 2810ms ease;
+        -o-animation: cs_title_text 12000ms infinite 2810ms ease;
+        animation: cs_title_text 12000ms infinite 2810ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num2 .cs_title > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num2 .cs_title > .cs_wrapper {
+        -webkit-animation: cs_title_text 12000ms infinite 6810ms ease;
+        -moz-animation: cs_title_text 12000ms infinite 6810ms ease;
+        -ms-animation: cs_title_text 12000ms infinite 6810ms ease;
+        -o-animation: cs_title_text 12000ms infinite 6810ms ease;
+        animation: cs_title_text 12000ms infinite 6810ms ease;
+    }
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num0 .cs_descr > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num0 .cs_descr > .cs_wrapper {
+        -webkit-animation: cs_descr_text 12000ms infinite -1190ms ease;
+        -moz-animation: cs_descr_text 12000ms infinite -1190ms ease;
+        -ms-animation: cs_descr_text 12000ms infinite -1190ms ease;
+        -o-animation: cs_descr_text 12000ms infinite -1190ms ease;
+        animation: cs_descr_text 12000ms infinite -1190ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num1 .cs_descr > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num1 .cs_descr > .cs_wrapper {
+        -webkit-animation: cs_descr_text 12000ms infinite 2810ms ease;
+        -moz-animation: cs_descr_text 12000ms infinite 2810ms ease;
+        -ms-animation: cs_descr_text 12000ms infinite 2810ms ease;
+        -o-animation: cs_descr_text 12000ms infinite 2810ms ease;
+        animation: cs_descr_text 12000ms infinite 2810ms ease;
+    }
+    .csslider1 > #cs_play1:checked ~ .cs_description > .num2 .cs_descr > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > .num2 .cs_descr > .cs_wrapper {
+        -webkit-animation: cs_descr_text 12000ms infinite 6810ms ease;
+        -moz-animation: cs_descr_text 12000ms infinite 6810ms ease;
+        -ms-animation: cs_descr_text 12000ms infinite 6810ms ease;
+        -o-animation: cs_descr_text 12000ms infinite 6810ms ease;
+        animation: cs_descr_text 12000ms infinite 6810ms ease;
+    }
+
+
+
+
+    .csslider1 > #cs_play1:checked ~ .cs_description > label > .cs_title,
+    .csslider1 > #cs_play1:checked ~ .cs_description > label > .cs_descr,
+    .csslider1 > #cs_play1:checked ~ .cs_description > label > .cs_title > .cs_wrapper,
+    .csslider1 > #cs_play1:checked ~ .cs_description > label > .cs_descr > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_title,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_descr,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_title > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_descr > .cs_wrapper {
+        -webkit-transition: none;
+        -moz-transition: none;
+        -ms-transition: none;
+        -o-transition: none;
+        transition: none;
+
+    }
+
+    .csslider1.cs_pauseHover:hover > .cs_description > label > .cs_title,
+    .csslider1.cs_pauseHover:hover > .cs_description > label > .cs_descr,
+    .csslider1.cs_pauseHover:hover > .cs_description > label > .cs_title > .cs_wrapper,
+    .csslider1.cs_pauseHover:hover > .cs_description > label > .cs_descr > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_title,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_descr,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_title > .cs_wrapper,
+    .csslider1 > #cs_pause1:checked ~ .cs_description > label > .cs_descr > .cs_wrapper {
+        -webkit-animation-play-state: paused !important;
+        -moz-animation-play-state: paused !important;
+        -ms-animation-play-state: paused !important;
+        -o-animation-play-state: paused !important;
+        animation-play-state: paused !important;
+    }
+
+    /* stop */
+    .csslider1 > .slide:checked ~ .cs_description > label {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        -o-animation: none;
+        animation: none;
+    }
+
+p{
+    display: block;
+    width:600px;
+    height: 500px;
+    font-size: 50px;
+    color:darkblue;
+    padding-left: 80px;
+}
+
+    /* /calculate autoplay *//* hide description & bullets on mobile devices */
+    @media
+    only screen and (max-width: 480px),
+    only screen and (-webkit-max-device-pixel-ratio: 2)      and (max-width: 480px),
+    only screen and (   max--moz-device-pixel-ratio: 2)      and (max-width: 480px),
+    only screen and (     -o-max-device-pixel-ratio: 2/1)    and (max-width: 480px),
+    only screen and (        max-device-pixel-ratio: 2)      and (max-width: 480px),
+    only screen and (                max-resolution: 192dpi) and (max-width: 480px),
+    only screen and (                max-resolution: 2dppx)  and (max-width: 480px) {
+        .csslider1 > .cs_description,
+        .csslider1 > .cs_bullets {
+            display: none;
+        }
+    }
+    div.speech {
+        margin: 10px 0;
+        padding: 8px;
+        table-layout: fixed;
+        word-break: break-all;
+        position: relative;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#ffffff), color-stop(0.1, #ececec), color-stop(0.5, #dbdbdb), color-stop(0.9, #dcdcdc), to(#8c8c8c) );
+        border: 1px solid #989898;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+    }
+    div.speech:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 15px;
+        top: -20px;
+        border: 10px solid;
+        border-color: transparent transparent #989898 transparent;
+    }
+    div.speech:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 17px;
+        top: -16px;
+        border: 8px solid;
+        border-color: transparent transparent #ffffff transparent;
+    }
+    div.speech.right {
+        box-shadow: -2px 2px 5px #CCC;
+        margin-right: 10px;
+        width: 75%;
+        float: right;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#e4ffa7), color-stop(0.1, #bced50), color-stop(0.4, #aed943), color-stop(0.8, #a7d143), to(#99BF40) );
+    }
+    div.speech.right:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 9px;
+        bottom: auto;
+        left: auto;
+        right: -10px;
+        border-width: 9px 0 9px 10px;
+        border-color: transparent #989898;
+    }
+    div.speech.right:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 10px;
+        bottom: auto;
+        left: auto;
+        right: -8px;
+        border-width: 8px 0 8px 9px;
+        border-color: transparent #bced50;
+    }
+    div.speech.left {
+        box-shadow: 2px 2px 2px #CCCCCC;
+        margin-left: 10px;
+        width: 75%;
+        float: left;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#ffffff), color-stop(0.1, #eae8e8), color-stop(0.4, #E3E3E3), color-stop(0.8, #DFDFDF), to(#D9D9D9) );
+    }
+    div.speech.left:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 9px;
+        bottom: auto;
+        left: -10px;
+        border-width: 9px 10px 9px 0;
+        border-color: transparent #989898;
+    }
+    div.speech.left:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 10px;
+        bottom: auto;
+        left: -8px;
+        border-width: 8px 9px 8px 0;
+        border-color: transparent #eae8e8;
+    }
+    .leftimg {
+        float: left;
+    }
+    .rightimg{
+        float: right;
+    }
+    .rightimg,.leftimg {
+        margin-top: 10px;
+    }
+
+    .leftd {
+        clear: both;
+        float: left;
+        background: url(data:image/jpg;base64,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AAItAAAAEAAAAAEAAAAAABJwcmludE91dHB1dE9wdGlvbnMAAAAXAAAAAENwdG5ib29sAAAAAABDbGJyYm9vbAAAAAAAUmdzTWJvb2wAAAAAAENybkNib29sAAAAAABDbnRDYm9vbAAAAAAATGJsc2Jvb2wAAAAAAE5ndHZib29sAAAAAABFbWxEYm9vbAAAAAAASW50cmJvb2wAAAAAAEJja2dPYmpjAAAAAQAAAAAAAFJHQkMAAAADAAAAAFJkICBkb3ViQG/gAAAAAAAAAAAAR3JuIGRvdWJAb+AAAAAAAAAAAABCbCAgZG91YkBv4AAAAAAAAAAAAEJyZFRVbnRGI1JsdAAAAAAAAAAAAAAAAEJsZCBVbnRGI1JsdAAAAAAAAAAAAAAAAFJzbHRVbnRGI1B4bEBSAAAAAAAAAAAACnZlY3RvckRhdGFib29sAQAAAABQZ1BzZW51bQAAAABQZ1BzAAAAAFBnUEMAAAAATGVmdFVudEYjUmx0AAAAAAAAAAAAAAAAVG9wIFVudEYjUmx0AAAAAAAAAAAAAAAAU2NsIFVudEYjUHJjQFkAAAAAAAAAAAAQY3JvcFdoZW5QcmludGluZ2Jvb2wAAAAADmNyb3BSZWN0Qm90dG9tbG9uZwAAAAAAAAAMY3JvcFJlY3RMZWZ0bG9uZwAAAAAAAAANY3JvcFJlY3RSaWdodGxvbmcAAAAAAAAAC2Nyb3BSZWN0VG9wbG9uZwAAAAAAOEJJTQPtAAAAAAAQAEgAAAABAAIASAAAAAEAAjhCSU0EJgAAAAAADgAAAAAAAAAAAAA/gAAAOEJJTQQNAAAAAAAEAAAAHjhCSU0EGQAAAAAABAAAAB44QklNA/MAAAAAAAkAAAAAAAAAAAEAOEJJTScQAAAAAAAKAAEAAAAAAAAAAjhCSU0D9QAAAAAASAAvZmYAAQBsZmYABgAAAAAAAQAvZmYAAQChmZoABgAAAAAAAQAyAAAAAQBaAAAABgAAAAAAAQA1AAAAAQAtAAAABgAAAAAAAThCSU0D+AAAAAAAcAAA/////////////////////////////wPoAAAAAP////////////////////////////8D6AAAAAD/////////////////////////////A+gAAAAA/////////////////////////////wPoAAA4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bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06RG9jdW1lbnRJRD0iQzI1RDNBM0E5RDJGMjRCQUI1NUE1QzBDNTU0RjYzNDgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzE4NDYyMzE5QzdDRTUxMThDNzJBRjRGQkFGMDQ0OEEiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0iQzI1RDNBM0E5RDJGMjRCQUI1NUE1QzBDNTU0RjYzNDgiIGRjOmZvcm1hdD0iaW1hZ2UvanBlZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wOkNyZWF0ZURhdGU9IjIwMTUtMTAtMjdUMTk6MTIrMDg6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE1LTEwLTI3VDE5OjE2OjM4KzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDE1LTEwLTI3VDE5OjE2OjM4KzA4OjAwIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MzA4NDYyMzE5QzdDRTUxMThDNzJBRjRGQkFGMDQ0OEEiIHN0RXZ0OndoZW49IjIwMTUtMTAtMjdUMTk6MTY6MzgrMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDozMTg0NjIzMTlDN0NFNTExOEM3MkFGNEZCQUYwNDQ4QSIgc3RFdnQ6d2hlbj0iMjAxNS0xMC0yN1QxOToxNjozOCswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz7/7gAOQWRvYmUAZEAAAAAB/9sAhAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgICAgICAgICAgIDAwMDAwMDAwMDAQEBAQEBAQEBAQECAgECAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwP/wAARCAA7ADIDAREAAhEBAxEB/90ABAAH/8QBogAAAAYCAwEAAAAAAAAAAAAABwgGBQQJAwoCAQALAQAABgMBAQEAAAAAAAAAAAAGBQQDBwIIAQkACgsQAAIBAwQBAwMCAwMDAgYJdQECAwQRBRIGIQcTIgAIMRRBMiMVCVFCFmEkMxdScYEYYpElQ6Gx8CY0cgoZwdE1J+FTNoLxkqJEVHNFRjdHYyhVVlcassLS4vJkg3SThGWjs8PT4yk4ZvN1Kjk6SElKWFlaZ2hpanZ3eHl6hYaHiImKlJWWl5iZmqSlpqeoqaq0tba3uLm6xMXGx8jJytTV1tfY2drk5ebn6Onq9PX29/j5+hEAAgEDAgQEAwUEBAQGBgVtAQIDEQQhEgUxBgAiE0FRBzJhFHEIQoEjkRVSoWIWMwmxJMHRQ3LwF+GCNCWSUxhjRPGisiY1GVQ2RWQnCnODk0Z0wtLi8lVldVY3hIWjs8PT4/MpGpSktMTU5PSVpbXF1eX1KEdXZjh2hpamtsbW5vZnd4eXp7fH1+f3SFhoeIiYqLjI2Oj4OUlZaXmJmam5ydnp+So6SlpqeoqaqrrK2ur6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) 0px 10px no-repeat;
+        padding-left: 50px;
+    }
+    .rightd {
+        clear: both;
+        float: right;
+        background: url(data:image/jpg;base64,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AAAASAAvZmYAAQBsZmYABgAAAAAAAQAvZmYAAQChmZoABgAAAAAAAQAyAAAAAQBaAAAABgAAAAAAAQA1AAAAAQAtAAAABgAAAAAAAThCSU0D+AAAAAAAcAAA/////////////////////////////wPoAAAAAP////////////////////////////8D6AAAAAD/////////////////////////////A+gAAAAA/////////////////////////////wPoAAA4QklNBAgAAAAAABAAAAABAAACQAAAAkAAAAAAOEJJTQQeAAAAAAAEAAAAADhCSU0EGgAAAAADeQAAAAYAAAAAAAAAAAAAADIAAAAyAAAAIgB1AD0AMQAxADEANgA0ADUAMAA0ADAANgAsADIAMAA2ADAAOAAxADgAMQA5ADUAJgBmAG0APQAyADEAJgBnAHAAPQAwAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAyAAAAMgAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAbnVsbAAAAAIAAAAGYm91bmRzT2JqYwAAAAEAAAAAAABSY3QxAAAABAAAAABUb3AgbG9uZwAAAAAAAAAATGVmdGxvbmcAAAAAAAAAAEJ0b21sb25nAAAAMgAAAABSZ2h0bG9uZwAAADIAAAAGc2xpY2VzVmxMcwAAAAFPYmpjAAAAAQAAAAAABXNsaWNlAAAAEgAAAAdzbGljZUlEbG9uZwAAAAAAAAAHZ3JvdXBJRGxvbmcAAAAAAAAABm9yaWdpbmVudW0AAAAMRVNsaWNlT3JpZ2luAAAADWF1dG9HZW5lcmF0ZWQAAAAAVHlwZWVudW0AAAAKRVNsaWNlVHlwZQAAAABJbWcgAAAABmJvdW5kc09iamMAAAABAAAAAAAAUmN0MQAAAAQAAAAAVG9wIGxvbmcAAAAAAAAAAExlZnRsb25nAAAAAAAAAABCdG9tbG9uZwAAADIAAAAAUmdodGxvbmcAAAAyAAAAA3VybFRFWFQAAAABAAAAAAAAbnVsbFRFWFQAAAABAAAAAAAATXNnZVRFWFQAAAABAAAAAAAGYWx0VGFnVEVYVAAAAAEAAAAAAA5jZWxsVGV4dElzSFRNTGJvb2wBAAAACGNlbGxU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aW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpEb2N1bWVudElEPSIxQjZEMTc5OTU2RjBERkJDRDRCNUFGOUZCMTVCRDBCRiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozNDg0NjIzMTlDN0NFNTExOEM3MkFGNEZCQUYwNDQ4QSIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSIxQjZEMTc5OTU2RjBERkJDRDRCNUFGOUZCMTVCRDBCRiIgZGM6Zm9ybWF0PSJpbWFnZS9qcGVnIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiB4bXA6Q3JlYXRlRGF0ZT0iMjAxNS0xMC0yN1QxOToxMzoyNSswODowMCIgeG1wOk1vZGlmeURhdGU9IjIwMTUtMTAtMjdUMTk6MTg6MDcrMDg6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTUtMTAtMjdUMTk6MTg6MDcrMDg6MDAiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDozMjg0NjIzMTlDN0NFNTExOEM3MkFGNEZCQUYwNDQ4QSIgc3RFdnQ6d2hlbj0iMjAxNS0xMC0yN1QxOToxNzo1NiswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjM0ODQ2MjMxOUM3Q0U1MTE4QzcyQUY0RkJBRjA0NDhBIiBzdEV2dDp3aGVuPSIyMDE1LTEwLTI3VDE5OjE4OjA3KzA4OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPD94cGFja2V0IGVuZD0idyI/Pv/uAA5BZG9iZQBkQAAAAAH/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwMBAQEBAQEBAQEBAQICAQICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA//AABEIADIAMgMBEQACEQEDEQH/3QAEAAf/xAGiAAAABgIDAQAAAAAAAAAAAAAHCAYFBAkDCgIBAAsBAAAGAwEBAQAAAAAAAAAAAAYFBAMHAggBCQAKCxAAAgEDBAEDAwIDAwMCBgl1AQIDBBEFEgYhBxMiAAgxFEEyIxUJUUIWYSQzF1JxgRhikSVDobHwJjRyChnB0TUn4VM2gvGSokRUc0VGN0djKFVWVxqywtLi8mSDdJOEZaOzw9PjKThm83UqOTpISUpYWVpnaGlqdnd4eXqFhoeIiYqUlZaXmJmapKWmp6ipqrS1tre4ubrExcbHyMnK1NXW19jZ2uTl5ufo6er09fb3+Pn6EQACAQMCBAQDBQQEBAYGBW0BAgMRBCESBTEGACITQVEHMmEUcQhCgSORFVKhYhYzCbEkwdFDcvAX4YI0JZJTGGNE8aKyJjUZVDZFZCcKc4OTRnTC0uLyVWV1VjeEhaOzw9Pj8ykalKS0xNTk9JWltcXV5fUoR1dmOHaGlqa2xtbm9md3h5ent8fX5/dIWGh4iJiouMjY6Pg5SVlpeYmZqbnJ2en5KjpKWmp6ipqqusra6vr/2gAMAwEAAhEDEQA/ANw3tvt/dS713JtHbObq9uYHZbY2hzeQxMNJJufP7oy2Op80KGlnroKmKhoqDH1VOiRxRK07vIWlVEUEfct8s2u8Wpvb9m8IsyRxo2gUSmtmalVCk0xUkkfljH70+828e3+7WPLHLNrGNyeNZpZp11qivXT28G1AflSnlQgPX9xb9ptQTsTs6PQtx5P4M2o/SxP8Lb6fW/sSHkTYxTTCx/6iH/6B6g9/vLe6agFbzaz/ANQo/wCgh0gcp8hO0qSN3p+y+wPSWA1w4J5Lj6/snHGQr/Q6f9j7oeR9jDaTA1f+eh6ft0U6qfvL+7GnUJ9tK/K0r/gboMsl8r+7INX2vZ29k0fX7jG7fjuR/qRPj49XI/F7+/PyPsaDMJ/K5Y/4FPTa/ec91GNBcbb+dmRT18x0HWT+a3yGoGZo+0NzFQjlRNhtum7AC17UQIIPtMeTNkpiJv8Aspf/AKA6tJ95v3R09t7tla+VoD/z91D2D/M47n2NvbEVe/sy2+9gyZPGUW6MRkMTjKLKU2MyORgx8uWxFfRxU7LUY77nyBGJSUppK8hgiv8Ak6wjtHexYx3IJIrK0gYKpZhkChoCf9VOhPyN95jmu45n23bub4befa7l1jDwwiLw3dgqBhVixZiKHgOB41Gxr5E/47J+j7n9I/4D/wBfr+n/AB9xnrj/AIRwr+X8XWdXgyfwn4qfn/D1/9DaG7dyP8P7d7rUuD9z2NtQKvI8f+/C22Lk/SzlD9Pcx8j52O1Ho1z/AMeTrnz95s6/dKRQKaNqtT9uH4ft6AXM5nyGVRKoZY3e1mJbRc2FiLcexY76Ap0k1YD9vWPApkswAAJqfkK9U3fzA/5k0XxVzWI6o622dtjsHvDObYo95Zao3fV5Sh2h1htbNVFVTYCfcf8ABWTLbh3PuE0k0+OxkEtPClFEZ6mZVkijcJ8zcyLsssdvDG0t0xI0kjwxQVqR8Rr8vTqevZb2TuPdC3u983XcLix5agahMf8AaSMKVCN8IORkg8ftoR/oX+bPu3dm/ts7A+SO0uvKfE7yzNDt/C9rbDgzuIg2tuHKVUdLhIt6bSy2QzUA23kMjJHTDJ0VWstFNKjzQvFqZQ/s/Okt9O0V9bLCp4GHtBrwDauNfOnUge4v3ZLPZ+X7jmDkje764MSsZIbkh20opZmUpRQKDgQf8nVlO6dyya54ZbwyQz1FPLG5AdZIHaORTZiP1KfY4kHhuU4jSDUcM+X5dYdRDxYll4EsRpPEU9ei8bnz5l8kfkB8lRgY7E3B8m5McliL8jn2nuXHgLg8Zf8Aqw/R1y9Gf6xcuGo/5KNp/wBpEfW9Lp/1/wDi06fx/vr+4Ax6f6D12O1f9pFev//R2TvkTXR0ndncUWplc782lNbVYXOwdvWNvobgn3L3JDsNkgpTDXP/AB5Ouev3lzq91roHh+6bQfyfoq2cziLUxhaiSKeTyxwyBWnhDuliJo106gymy8i5PHPsWs8mkssQdVoStaE5xQ/bx+XWPU6QtBLDLN4eugBpWnr9letVP+bt1hu7bHyCzPe1PRVe4+tt/wCG2ft/PZujVxS9a732RhFwlRtredfTfdHb4z2Ppo6/ER1iwRTxGWNGMiFfcUc6WU6bsu6PII7ZkFHH6vea6omjFDGVx3k0Or5ddBfu4b9aXnJEPKjlrXc4JpJCkv6SywUUxyxs2JGejAqM46rx6L2RubvfsLB7Z2o9McPFkMflt3dhNpn2nsLauNyFLVZPO7sqzJDisJDDFEI6dpqhJp6t41hViSQGtttGv7qC1tI2eRXUvHXQFUEVk8c9pAHdopU0p1MPOvMW18tct7pvN7dEpLbzRRW8Y1TSytEyongAaiHYhdVKZr1subm3LSyVCvBWvUwVCT1dFOGSSKrpJm/aqVq4C9NVIyW0yIzK5uQT7myUyhCQitGaDWDUEDhj59ckwzPNfzy20lpOZAWt5VIdWb4qE0oFPlToCc9nwaulRZOZMtthL3v+rdeJA4H/AAb2hnJMAr6y/wDVh+jnlxi3MPLwPD942n/aQnX0F/8A63+4Ip/1a67D/wDW7r//0tgf5bZcUPyB7lhL6Am69kzMWYKFU9fYBmJLWCJZeT9Pct8kGmyweuu4/wCPp1zz+8urN7rXSqDq/dVrw+yQ9a9v8275m7v+OnSm1dpdX5+u2t2n35ms5tyn3VjpxT5vY3W23KCGq3huPBM6OaHceflyFPisdXKC1D555o/3FjZd857xLtlmLS1AFxNUBx8SgcSpHA17TQ9Jvu8e31hz1zNebpvIMm07UiSGM90csjtpEcikFWoBrCEcM/PrXm+EXyiX44d/4zcm4srVxdYdoSR7A7sp66prM7j8jtrJ1aTY7ee6aLKyZFNx5DZm4xDXGoq0nmNK9SHLIxHuPeXNxXa92tppCXt2RllDZWQyYq9cNp8q8OsvPeHkKLm/kTdLTl8G132yIntXiHhvGEoQkJShUmlNKcfTo6380z5ObXyEeF+NnVuW2hUbY+4xvYHbsfXJ23DtDJVBH+/A2ZUnZ8VNgsuYEnkzVUg8oX/JUmF/SDfme7tI7Kw2DbvDWEMzuY6UamRqK4JPzPUR/d15R5n3Ded39zPcR759zULBAl2JDIp+HWiygMADQ6gAPOvRafgL8gtx7R31RdO1mWmrOvN+jMxYPB5Csmq4tpb2x9HNkKCp21DUySPi8VuWjpZqaqpIitL5hFMqK4Ysxyxufh7jNtk7ObeWMMtCTRgK0X7c1A6OfvJ+3u27ryp/XbbLeOHfrCUCXSoVZImOl3kIA1acEM2BU56tIye4BJmcVEGVj/eLZ8cgDAhWfeWEurWuqsFPI9j2aqwqCTpPiEV8wYHz1g5y23ib3y3NSjPuNqCB6rcx8P8AD19IrSP8P+Aun6D6f8U9wf8A9auuw1T/AMb6/9O7n5xZYUfyc7tpiI5NeX2MEglbSkrz9Z4dUV250oznk249y1ySQu0WbE0AknJPyEkZ654/ebDH3Q3EJIVY7TaCo4iocf7HWtT/ADbPin2t8qKLqbsLpWipd0b46oxW4tp5nrqTLY7D5DcW1dwVWMzCZHZ9bmKqixFdnsPmaB0loppoZKmmlVoSzIyeyzmvar27itrm1UyLEZS48wHk1KQPOo4+nRt93P3N5X5Mu+Zth5ju1tLW/lge2kKkh3SPRIJCP7MigI1YIzXFDQBU/Dz5n0U81PVfFbu6CaB2ilV9s07LcDkLJHk5IZYyp/UrMpH59gQ7duApWxlyK/CT1mavPvIxCt/XTbAeI/XWo/ZwP8+mgfEz5Y45BCnxh7aoIk1MlPDtqip4kMhLOUiiyCxqZGNz/U8n34bZf4AsJAP9KerP7g8juS8nO+2k+puAf5noyXxo+Knde2uzdr9k9qbSrOssFsmrkz1Bh9z12Mj3ZufNRUtTT4ygocFjq/IVNDiElqPLVVlX4UVE8aK7uLHvL213a7pZ3VxGY7WJ9THzGDSg4mpPUHe+vu5ydHyHzDyvsm9W99zFuNv4UccZ1poLL4jNIO1QqVIr50FM4skkzYkzuFQ6UaXeG0pG0nVrWXeWA0MQLamAU8expcFhHb1aqqmj8xFJX/CPt6wi5aij/rRsYiJ0tuMDgcKfqx/4Sp6+nX/9S+4bp/1b66/f9B9f/9S7f+Z31f2Hsjvfc3a77Z3JlesexaTaORpN27fwWU3Bj8DuHbuAi21kts7kTDUldW4asrUooqujmliFNURO6LJ5I2X3IfKe8WFtZ/u+7mETgyaWPAmQqTq9ANOPWvWFP3kvbvm3cuZo+bdi2qS+s5baGGSOMVkQRVo0YHxsxOVNAFBIJ4dVC7i3FNOGKYjdsxBLL4tlb59LaSCfTt06uD9D7Fn7125QQm6wUPHu49YzDkXnj8XIO6E+WqAGn2VOD8+gSzeSyTI/i2nvqf62MWwd/fmw4ttgj/ivtmTdrLUNO7W4FOHXh7d85ONTcg7rq+UH+z0Dedjz9SJDFsXsl2KnmPrfsJ9LEHm52vY6T7T/AL4tg3/JWtiteqH295zoV/1u90p/zR/2egkzOO3rItoevO0nsG5j6t7EIctxcgbWABJHthtwsKuf3nbhSeFerQe3/PEQIX2+3TX5HwACB6A14Hz6Ef4s/ET5G/LDvjYHWvXnU/ZFNR1G8tp12+N/bk2Luja+yOt9m4fcGPzOe3JuLPbixWLpTVpQULx0FDTmWqrqt440QgllLNy3ixit18G5SRwxIC181pmtKflXPUi+3HtNz5u/Nm1zXfLlxY7Zbyo8kk4CmqtqUIorX+lUilMcRX6TOn/AfTxfqP8Amv8AVfp/X7jX9P1Pw066X6x6/Ph5/wCbr//V38E/zz/r/Sv/ACz/AOl/d/8AQk4f5eveS8f8nUj3Tr3Xvfuvde9+691737r3UWq/zY/X+tP0/p/Wv6/8P6f4+7x/F5cDx+zp+D4jw4H7eB4dSP8Aiv8Avv8AY+2v+guk3+r/AFfPr//Z) right 10px no-repeat;
+        padding-right: 50px;
+    }
+    .clear {
+        clear: both;
+    }

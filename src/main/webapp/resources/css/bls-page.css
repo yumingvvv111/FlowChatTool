@@ -1,0 +1,107 @@
+/** User Login&Register Page*/
+html {
+    background-color: #2B7BC4;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url('../images/login-bg.jpg') repeat-x 0 0;
+}
+
+.login-wraper {
+    width: 1024px;
+    min-height: 768px;
+    margin: 0 auto;
+    background: url('../images/login.jpg') no-repeat 0 0;
+    position: relative;
+}
+
+.register-wraper {
+    width: 1024px;
+    min-height: 768px;
+    margin: 0 auto;
+    background: url('../images/register.jpg') no-repeat 0 0;
+    position: relative;
+}
+
+.login-wraper input, .register-wraper input {
+    display: block;
+    width: 195px;
+    height: 20px;
+    border: none;
+    position: absolute;
+    background: none;
+}
+
+.login-wraper input[name="loginId"] {
+    top: 322px;
+    left: 450px;
+}
+
+.register-wraper input[name="loginId"] {
+    top: 282px;
+    left: 450px;
+}
+
+.login-wraper input[name="loginPwd"] {
+    top: 366px;
+    left: 450px;
+}
+
+.register-wraper input[name="loginPwd"] {
+    top: 326px;
+    left: 450px;
+}
+
+.register-wraper input[name="rePassword"] {
+    top: 369px;
+    left: 450px;
+}
+
+.login-wraper button, .register-wraper button {
+    display: block;
+    width: 85px;
+    height: 35px;
+    border: none;
+    position: absolute;
+    background: none;
+    text-indent: -300px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.login-wraper .button-left, .register-wraper .button-left {
+    top: 423px;
+    left: 416px;
+}
+
+.login-wraper .button-right, .register-wraper .button-right {
+    top: 423px;
+    left: 522px;
+}
+
+.user-gate {
+    width: 140px;
+    height: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: white;
+}
+
+.user-gate a {
+    display: inline-block;
+    color: white;
+}
+
+.error-tip {
+    position: absolute;
+    width: 150px;
+    padding: 10px;
+    background: white;
+    opacity: 0.7;
+    color: black;
+    border:1px solid #DDDDDD;
+    border-radius: 3px;
+}

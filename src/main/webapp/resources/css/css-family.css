@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../resources/fonts/cJZKeOuBrn4kERxqtaUH3fY6323mHUZFJMgTvxaG2iE.eot)/*tpa=http://fonts.gstatic.com/s/opensans/v10/cJZKeOuBrn4kERxqtaUH3fY6323mHUZFJMgTvxaG2iE.eot*/;
+}
+
+.ui-draggable .ui-dialog-titlebar {
+  
+  border-color: darkgray;
+  background: darkgray;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+  color: gray;
+}
